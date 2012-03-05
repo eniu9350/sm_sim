@@ -42,7 +42,8 @@ int userlist_add(userlist* ul, int uid);
 int userlist_expand(userlist* ul);
 
 /*------- ch ops --------------------------*/
-channel_info_update_batch(channelinfo* ci, int* uidlist, int* chlist, int n);
+void channel_info_update_batch(channel_info* ci, int* uidlist, int* chlist, int n);
+channel* channel_info_get_by_uid(channel_info* ci, int uid);
 
 
 /*------- channel_update ops --------------------------*/

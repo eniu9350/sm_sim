@@ -1,5 +1,7 @@
 #include "event.h"
 
+#include "stdio.h"
+
 ev_list* ev_list_create()
 {
 	ev_list* l = (ev_list*)malloc(sizeof(ev_list));
@@ -14,7 +16,7 @@ ev* ev_list_get(ev_list* l, int i)
 	e = l->head;
 
 	if(!e)	{
-		return null;
+		return NULL;
 	}
 
 	for(j=0;j<i;j++)	{
@@ -27,9 +29,11 @@ ev* ev_list_get(ev_list* l, int i)
 
 int ev_list_remove(ev_list* l, int i)
 {
-	int j;
+	ev* tmp;
+	int size;
 	ev* e;	//to remove
 	ev* pre;
+	int j;
 
 	if(!l->head)	{	//head is null
 		if(i==0)	{
@@ -40,7 +44,13 @@ int ev_list_remove(ev_list* l, int i)
 		}
 	}
 
-	if(i>=l->size)	{
+	size = 0;
+	tmp = l->head;
+	while(tmp!=NULL)	{
+		tmp = tmp->next;
+		size++;
+	}
+	if(i>=size)	{
 		return -2;
 	}
 

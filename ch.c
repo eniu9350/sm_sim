@@ -1,5 +1,8 @@
 #include "ch.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+
 /*------- userlist ops --------------------------*/
 userlist* userlist_create()
 {
@@ -14,7 +17,6 @@ userlist* userlist_create()
 
 int userlist_add(userlist* ul, int uid)
 {
-	userlist* ul;
 	int* old;
 	old = ul->list;
 	if(ul->size==ul->capacity)	{
@@ -37,7 +39,7 @@ int userlist_expand(userlist* ul)
 		perror("realloc failed when expanding userlist\n");
 		return -1;
 	}
-	ul->capacity = ul->capcacity*2;
+	ul->capacity = ul->capacity*2;
 	return 0;
 }
 
@@ -50,7 +52,7 @@ channel_info_update_batch(channel_info* ci, int* uidlist, int* chlist, int n)
 	int i;
 	channel* ch;
 	int tmpch;
-	channel_update* culist;
+	channel_update** culist;
 	int nculist;
 	channel_update* cu;
 	//0:not processed, 1:removal processed, 2:add processed, 3: all
@@ -68,7 +70,7 @@ channel_info_update_batch(channel_info* ci, int* uidlist, int* chlist, int n)
 		pre[i] = ch->chid;
 	}
 
-	culist = (channel_update*)malloc(n*sizeof(channel_update*));
+	culist = (channel_update**)malloc(n*sizeof(channel_update*));
 	nculist = 0;
 
 	while(1)	{
@@ -83,7 +85,7 @@ channel_info_update_batch(channel_info* ci, int* uidlist, int* chlist, int n)
 		}
 
 		cu = channel_update_create();
-		culist[nculist++] == cu;
+		culist[nculist++] = cu;
 		for(i=0;i<n;i++)	{
 			if(flag[i]==0 || flag[i]==2)	{
 				//choose one not processed leave
@@ -126,7 +128,7 @@ channel_info_update_batch(channel_info* ci, int* uidlist, int* chlist, int n)
 }
 
 
-channel* chinfo_get_by_uid(chinfo* ci, int uid)
+channel* channel_info_get_by_uid(channel_info* ci, int uid)
 {
 	int i,j;
 	for(i=0;i<ci->size;i++)	{
