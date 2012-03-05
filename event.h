@@ -1,6 +1,9 @@
 #ifndef _SM_SIM_EVENT_
 #define _SM_SIM_EVENT_
 
+#include "ch.h"
+
+
 #define ET_HB_REQ 0
 #define ET_HB_RSP 1
 #define ET_CAR_REQ 2
@@ -8,30 +11,7 @@
 #define ET_SRV_REQ 4
 
 
-/*------- ch list--------------------------*/
-typedef struct freq	{
-}freq;
 
-typedef struct userlist	{
-	int* list;
-	int size;
-}userlist;
-
-typedef struct channel	{
-	//key = sgid+chid	
-	int sgid;
-	int chid;
-
-	//value = freq+usrlist
-	freq* f;
-	userlist* users;
-}channel;
-
-		
-typedef struct chinfo	{
-	channel* chlist;
-	int size;
-}chinfo;
 
 /*------- event and event queue--------------------------*/
 typedef struct ev	{
@@ -88,8 +68,7 @@ typedef struct evdata_srvreq	{
 ev* ev_create(int type, long time);
 void ev_destroy(ev* e);
 
-
-
+/*------- event list ops--------------------------*/
 ev_list* ev_list_create();
 ev* ev_list_get(ev_list* l, int i);
 int ev_list_remove(ev_list* l, int i);
