@@ -20,7 +20,7 @@ int userlist_add(userlist* ul, int uid)
 	int* old;
 	old = ul->list;
 	if(ul->size==ul->capacity)	{
-		if(userlist_expand(ul) == NULL)	{
+		if(userlist_expand(ul) != 0)	{
 			return -1;
 		}
 	}
@@ -45,7 +45,7 @@ int userlist_expand(userlist* ul)
 
 
 /*------- ch ops --------------------------*/
-channel_info_update_batch(channel_info* ci, int* uidlist, int* chlist, int n)
+void channel_info_update_batch(channel_info* ci, int* uidlist, int* chlist, int n)
 {
 	char* flag;	
 	int* pre;//previous channel
@@ -62,7 +62,7 @@ channel_info_update_batch(channel_info* ci, int* uidlist, int* chlist, int n)
 		flag[i] = 0;
 	}
 	for(i=0;i<n;i++)	{
-		ch = chinfo_get_by_uid(ci, uidlist[i]);
+		ch = channel_info_get_by_uid(ci, uidlist[i]);
 		if(ch == NULL)	{
 			perror("chid NULL when batch processing update!\n");
 			continue;

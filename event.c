@@ -1,6 +1,7 @@
 #include "event.h"
 
-#include "stdio.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 ev_list* ev_list_create()
 {
@@ -55,7 +56,7 @@ int ev_list_remove(ev_list* l, int i)
 	}
 
 	//init pointer
-	pre = l;
+	pre = NULL;
 	e = l->head;
 
 	for(j=0;j<i;j++)	{
@@ -63,7 +64,8 @@ int ev_list_remove(ev_list* l, int i)
 		e = e->next;
 	}
 
-	if(pre==l)	{	//remove head
+	//mmm: right?
+	if(pre==NULL)	{	//remove head
 		l->head = e->next;
 	}
 	else	{
@@ -122,4 +124,8 @@ ev* ev_create(int type, long time)
 void ev_destroy(ev* e)
 {
 	free(e->data);
+}
+
+int main()
+{
 }
