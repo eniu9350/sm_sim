@@ -75,7 +75,7 @@ typedef evdata_srvreq evdata_chchange;
 
 
 /*------- event loop ops--------------------------*/
-ev_loop_loop(ev_loop* el);
+void ev_loop_loop(context_global* gctx, ev_loop* el);
 
 /*------- event ops--------------------------*/
 ev* ev_create(int type, long time);
@@ -88,6 +88,7 @@ void ev_list_gets_by_time(ev_list* l, long start, long end, ev** evlist, int* si
 int ev_list_remove(ev_list* l, int i);
 int ev_list_add(ev_list* l, ev* e);
 
+//originally, fire_event should be executing handler instantaneously, but we allows to postponing event here for convinience
 int fire_event(ev_list* l, ev* e);	//wrapper of ev_list_add
 
 void reg_event_handler(ev_loop* l, int type, void* handler);

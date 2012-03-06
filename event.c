@@ -6,24 +6,22 @@
 #include "common.h"
 
 /*------- event loop ops--------------------------*/
-ev_loop_loop(ev_loop* el)
+void ev_loop_loop(context_global* gctx, ev_loop* el)
 {
 	ev* e;
 	long demul_interval;	//mmm
 	ev** evlist;
+	void (*handler)(ev_loop*, ev*);
 	evlist = (ev**)malloc(1000*sizeof(ev*));
+	
+
 	int evlistsize = -1;	//mmm: can its addr be used(e.g. &evlistsize) when not initialized
 	while(1)	{
 		//mmm: if all client ends and server no events, end
-		e = ev_list_get(el->evlist, 0);	
-		ev_list_gets_by_time(el->evlist, el->now, el->now+demul_interval, evlist, &evlistsize);
-
-		// i) 
-
-
-
-
-
+		e = ev_list_get(el->evlist, 0);
+		//ev_list_gets_by_time(el->evlist, el->now, el->now+demul_interval, evlist, &evlistsize);
+		handler = ((void *)(ev_loop*, ev*))evhandler_table_get(gctx->ehtable, e->type);
+		(*handler)(el, e);
 
 	}
 
@@ -192,7 +190,7 @@ int ev_list_add(ev_list* l, ev* enew)
 
 int fire_event(ev_list* l, ev* e)
 {
-	e->	
+	//log
 		ev_list_add(l, e);
 }
 
