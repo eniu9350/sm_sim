@@ -4,11 +4,11 @@
 #include "ch.h"
 
 
-#define ET_HB_REQ 0
-#define ET_HB_RSP 1
-#define ET_BC_REQ 2
-#define ET_BC_RSP 3
-#define ET_SRV_REQ 4
+#define ET_HB_REQ 0x00
+#define ET_HB_RSP 0x01
+#define ET_BC_REQ 0x02
+#define ET_BC_RSP 0x03
+#define ET_SRV_REQ 0x04
 
 
 
@@ -37,6 +37,7 @@ typedef struct evhandler_table	{
 typedef struct ev_loop	{
 	long now;
 	evhandler_table* ht;
+	ev_list* evlist;
 }ev_loop;
 
 /*------- data of concrete event types --------------------------*/
