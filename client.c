@@ -61,6 +61,10 @@ void client_handle_chchange(ev* e)
 void client_handle_bcreq(ev* e)
 {
 	client* c;	
+	evdata_bcreq* edata;
 
 	c = (client*)e->agent;
+	edata = (evdata_bcreq*)e->data;
+
+	channel_info_client_update(c->ci,  edata->chlist, edata->chsize, CHANNEL_INFO_UPDATE_MODE_OVERWRITE);
 }

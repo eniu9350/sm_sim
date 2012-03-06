@@ -56,7 +56,7 @@ typedef struct evdata_bcreq	{
 	//int chidsize;	//count of channels
 	struct channel_client* chlist;
 	int chsize;
-	long life;	//validity time
+	long life;	//validity time	//mmm: not used yet
 }evdata_bcreq;
 
 typedef struct evdata_bcrsp	{
