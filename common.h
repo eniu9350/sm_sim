@@ -6,7 +6,7 @@
 
 typedef struct context_global	{
 	long now;
-	event_loop* el;
+	ev_loop* el;
 }context_global;
 
 #endif

@@ -40,7 +40,7 @@ void client_handle_chchange(client* c, int chid, long time)
 		edata = (evdata_srvreq*)malloc(sizeof(evdata_srvreq));
 		edata->uid = c->id;
 		edata->ch = chid;
-		e = ev_create(ET_SRV_REQ, gct->now);	//mmm: should be now+1?
+		e = ev_create(ET_SRV_REQ, gctx->now);	//mmm: should be now+1?
 		e->data = edata;
 		e->agent = c;
 		ev_list_add(gctx->el->evlist, e);
