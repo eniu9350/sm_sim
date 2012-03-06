@@ -5,11 +5,14 @@
 #include "client.h"
 
 
+/*------- server event type --------------------------*/
 #define ET_HB_REQ 0x00
 #define ET_HB_RSP 0x01
 #define ET_BC_REQ 0x02
 #define ET_BC_RSP 0x03
 #define ET_SRV_REQ 0x04
+
+#define ET_ES_REQ 0x05
 
 struct channel_client;
 
@@ -71,6 +74,9 @@ typedef struct evdata_srvreq	{
 typedef evdata_srvreq evdata_chchange;
 
 
+/*------- event loop ops--------------------------*/
+ev_loop_loop(ev_loop* el);
+
 /*------- event ops--------------------------*/
 ev* ev_create(int type, long time);
 void ev_destroy(ev* e);
@@ -78,10 +84,11 @@ void ev_destroy(ev* e);
 /*------- event list ops--------------------------*/
 ev_list* ev_list_create();
 ev* ev_list_get(ev_list* l, int i);
+void ev_list_gets_by_time(ev_list* l, long start, long end, ev** evlist, int* size);
 int ev_list_remove(ev_list* l, int i);
 int ev_list_add(ev_list* l, ev* e);
 
-
+int fire_event(ev_list* l, ev* e);	//wrapper of ev_list_add
 
 void reg_event_handler(ev_loop* l, int type, void* handler);
 #endif

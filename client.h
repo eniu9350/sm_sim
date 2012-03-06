@@ -15,6 +15,10 @@
 #define CHANNEL_INFO_UPDATE_MODE_OVERWRITE 0
 #define CHANNEL_INFO_UPDATE_MODE_APPEND 1
 
+#define CLIENT_STATE_WORKING 0
+#define CLIENT_STATE_END 1
+
+
 struct ev;
 
 typedef struct channel_client	{
@@ -40,6 +44,8 @@ typedef struct client	{
 	channel_info_client* ci;
 
 	int chid;	//current watching
+
+	int state;
 
 }client;
 
