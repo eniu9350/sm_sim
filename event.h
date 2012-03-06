@@ -14,6 +14,8 @@
 
 #define ET_ES_REQ 0x05
 
+#define ET_CHECK_HB 0x06
+
 struct channel_client;
 
 
@@ -23,6 +25,7 @@ typedef struct ev	{
 	long time;
 	void* data;
 	void* agent;	//event listener info 
+	int processed;	//0: not processed, 1: processed
 	struct ev* next;
 }ev;	//dyn info
 
