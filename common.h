@@ -3,10 +3,11 @@
 
 #include "event.h"
 
+struct ev_loop;
 
 typedef struct context_global	{
 	long now;
-	ev_loop* el;
+	struct ev_loop* el;
 }context_global;
 
 #endif

@@ -2,6 +2,7 @@
 #define _SM_SIM_EVENT_
 
 #include "ch.h"
+#include "client.h"
 
 
 #define ET_HB_REQ 0x00
@@ -10,7 +11,7 @@
 #define ET_BC_RSP 0x03
 #define ET_SRV_REQ 0x04
 
-
+struct channel_client;
 
 
 /*------- event and event queue--------------------------*/
@@ -51,8 +52,10 @@ typedef struct evdata_hbrsp	{
 }evdata_hbrsp;
 
 typedef struct evdata_bcreq	{
-	int* chidlist;	//channel current serving
-	int chidsize;	//count of channels
+	//int* chidlist;	//channel current serving
+	//int chidsize;	//count of channels
+	struct channel_client* chlist;
+	int chsize;
 	long life;	//validity time
 }evdata_bcreq;
 
@@ -64,6 +67,9 @@ typedef struct evdata_srvreq	{
 	int uid;
 	int ch;
 }evdata_srvreq;
+
+typedef evdata_srvreq evdata_chchange;
+
 
 /*------- event ops--------------------------*/
 ev* ev_create(int type, long time);

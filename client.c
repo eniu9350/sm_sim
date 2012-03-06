@@ -26,13 +26,20 @@ void channel_info_client_update(channel_info_client* ci, channel_client* chlist,
 }
 
 /*------- event handler--------------------------*/
-void client_handle_chchange(client* c, int chid, long time)
+//void client_handle_chchange(client* c, int chid, long time)
+void client_handle_chchange(ev* e)
 {
+	client* c;	
+	int chid;
 	channel_client* ch;
 	ch = channel_info_client_get(c->ci, chid);
-	ev* e;
+	ev* newe;
 	evdata_srvreq* edata;
 	context_global* gctx;
+
+	c = (client*)e->agent;
+	chid = ((evdata_chchange*)e->data)->ch;
+
 	gctx = c->gctx;
 	if(ch==NULL)	{
 		//mmm:
@@ -40,13 +47,20 @@ void client_handle_chchange(client* c, int chid, long time)
 		edata = (evdata_srvreq*)malloc(sizeof(evdata_srvreq));
 		edata->uid = c->id;
 		edata->ch = chid;
-		e = ev_create(ET_SRV_REQ, gctx->now);	//mmm: should be now+1?
-		e->data = edata;
-		e->agent = c;
-		ev_list_add(gctx->el->evlist, e);
+		newe = ev_create(ET_SRV_REQ, gctx->now);	//mmm: should be now+1?
+		newe->data = edata;
+		newe->agent = c;
+		ev_list_add(gctx->el->evlist, newe);
 	}
 	else	{
 		printf("[client] watching!\n");
 		c->chid = chid;
 	}
+}
+
+void client_handle_bcreq(ev* e)
+{
+	client* c;	
+
+	c = (client*)e->agent;
 }

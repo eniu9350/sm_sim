@@ -8,11 +8,14 @@
 #define ET_CLIENT_HB_RSP 0x11
 #define ET_CLIENT_BC_REQ 0x12
 #define ET_CLIENT_BC_RSP 0x13
+#define ET_CLIENT_CHCHANGE 0x14
 //#define ET_CLIENT_SRV_REQ 4
 
 
 #define CHANNEL_INFO_UPDATE_MODE_OVERWRITE 0
 #define CHANNEL_INFO_UPDATE_MODE_APPEND 1
+
+struct ev;
 
 typedef struct channel_client	{
 	int chid;
@@ -47,5 +50,6 @@ void channel_info_client_update(channel_info_client* ci, channel_client* chlist,
 
 
 /*------- event handler--------------------------*/
-void client_handle_chchange(client* c, int chid, long time);
+void client_handle_chchange(struct ev* e);
+void client_handle_bcreq(struct ev* e);
 #endif
