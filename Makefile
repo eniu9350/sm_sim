@@ -1,2 +1,2 @@
 all:
-	gcc ch.c event.c
+	gcc ch.c event.c client.c

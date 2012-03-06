@@ -6,8 +6,8 @@
 
 #define ET_HB_REQ 0
 #define ET_HB_RSP 1
-#define ET_CAR_REQ 2
-#define ET_CAR_RSP 3
+#define ET_BC_REQ 2
+#define ET_BC_RSP 3
 #define ET_SRV_REQ 4
 
 
