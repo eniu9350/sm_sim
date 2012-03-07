@@ -12,9 +12,10 @@
 #define ET_BC_RSP 0x03
 #define ET_SRV_REQ 0x04
 
-#define ET_ES_REQ 0x05
+#define ET_RA_REQ 0x05	//res alloc
+#define ET_RR_REQ 0x06	//res release
 
-#define ET_CHECK_HB 0x06
+#define ET_CHECK_HB 0x07
 
 struct channel_client;
 
@@ -76,7 +77,18 @@ typedef struct evdata_srvreq	{
 
 typedef evdata_srvreq evdata_chchange;
 
+typedef struct evdata_rareq	{
+	int sgid;
+	int chid;
+}evdata_rareq;
 
+typedef struct evdata_rrreq	{
+	int sgid;
+	int chid;
+}evdata_rrreq;
+
+typedef struct evdata_checkhb	{
+}evdata_checkhb;	
 /*------- event loop ops--------------------------*/
 void ev_loop_loop(context_global* gctx, ev_loop* el);
 

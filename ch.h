@@ -27,6 +27,8 @@ typedef struct channel_update	{
 
 	userlist* leave;
 	userlist* join;
+
+	int processed;	//0: not, 1: processed
 }channel_update;
 
 
@@ -39,11 +41,16 @@ typedef struct channel_info	{
 /*------- userlist ops --------------------------*/
 userlist* userlist_create();
 int userlist_add(userlist* ul, int uid);
+int userlist_remove_by_id(userlist* ul, int uid);
 int userlist_expand(userlist* ul);
 
 /*------- ch ops --------------------------*/
-void channel_info_update_batch(channel_info* ci, int* uidlist, int* chlist, int n);
+int channel_join(channel* ch, int uid);
+int channel_leave(channel* ch, int uid);
+void channel_info_get_update_list(channel_info* ci, int* uidlist, int* chlist, int n, channel_update** culist, int* nculist)
 channel* channel_info_get_by_uid(channel_info* ci, int uid);
+channel* channel_info_get_by_sgid_and_chid(channel_info* ci, int sgid, int chid);
+
 
 
 /*------- channel_update ops --------------------------*/

@@ -32,6 +32,26 @@ int userlist_add(userlist* ul, int uid)
 }
 
 
+int userlist_remove_by_id(userlist* ul, int uid)
+{
+	int i;
+	for(i=0;i<ul->size;i++)	{
+		if(ul->list[i] == uid)	{
+			break;
+		}
+	}
+
+	if(i==ul->size)	{	//not found
+		perror("userlist_remove_by_id fail --- uid not found\n");
+		return -1;
+	}
+
+	for(--i;i<ul->size-1;i++)	{
+		ul->list[i] = ul->list[i+1];
+	}
+	return 0;
+}
+
 int userlist_expand(userlist* ul)
 {
 	ul->list = (int*)realloc(ul->list, ul->capacity * 2);
@@ -45,15 +65,32 @@ int userlist_expand(userlist* ul)
 
 
 /*------- ch ops --------------------------*/
-void channel_info_update_batch(channel_info* ci, int* uidlist, int* chlist, int n)
+int channel_join(channel* ch, int uid)
+{
+	int i;
+	//mmm: check if uid exist yet
+	userlist_add(ch->users, uid);
+	return 0;
+}
+
+int channel_leave(channel* ch, int uid)
+{
+	int i;
+	//mmm: check if uid exist
+	userlist_remove_by_id(ch->users, uid);
+	return 0;
+}
+
+
+void channel_info_get_update_list(channel_info* ci, int* uidlist, int* chlist, int n, channel_update** culist, int* nculist)
 {
 	char* flag;	
 	int* pre;//previous channel
 	int i;
 	channel* ch;
 	int tmpch;
-	channel_update** culist;
-	int nculist;
+	//channel_update** culist;
+	//int nculist;
 	channel_update* cu;
 	//0:not processed, 1:removal processed, 2:add processed, 3: all
 	flag = (char*)malloc(n*sizeof(char));
@@ -70,8 +107,8 @@ void channel_info_update_batch(channel_info* ci, int* uidlist, int* chlist, int 
 		pre[i] = ch->chid;
 	}
 
-	culist = (channel_update**)malloc(n*sizeof(channel_update*));
-	nculist = 0;
+	//culist = (channel_update**)malloc(n*sizeof(channel_update*));
+	*nculist = 0;
 
 	while(1)	{
 		for(i=0;i<n;i++)	{
@@ -85,7 +122,8 @@ void channel_info_update_batch(channel_info* ci, int* uidlist, int* chlist, int 
 		}
 
 		cu = channel_update_create();
-		culist[nculist++] = cu;
+		culist[*nculist] = cu;
+		*nculist = *nculist+1;
 		for(i=0;i<n;i++)	{
 			if(flag[i]==0 || flag[i]==2)	{
 				//choose one not processed leave
@@ -121,10 +159,10 @@ void channel_info_update_batch(channel_info* ci, int* uidlist, int* chlist, int 
 			}
 		}
 	}
-	
+
 	;
 	//mmm
-		
+
 }
 
 
@@ -147,6 +185,16 @@ channel* channel_info_get_by_uid(channel_info* ci, int uid)
 	return NULL;
 }
 
+channel* channel_info_get_by_sgid_and_chid(channel_info* ci, int sgid, int chid)
+{
+	int i;
+	for(i=0;i<ci->size;i++)	{
+		if(ci->chlist[i].sgid == sgid && ci->chlist[i].chid = chid)	{
+			return &(ci->chlist[i]);
+		}
+	}
+	return NULL;
+}
 
 /*------- channel_update ops --------------------------*/
 channel_update* channel_update_create()
@@ -155,6 +203,7 @@ channel_update* channel_update_create()
 	cu = (channel_update*)malloc(sizeof(channel_update));
 	cu->leave = userlist_create();
 	cu->join = userlist_create();
+	cu->processed = 0;
 }
 
 void channel_update_add_join(channel_update* cu, int uid)
