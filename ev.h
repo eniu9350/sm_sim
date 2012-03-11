@@ -15,7 +15,7 @@
 #define ET_CLIENT_HB_RSP 0x12
 #define ET_CLIENT_BC_REQ 0x13
 #define ET_CLIENT_BC_RSP 0x14
-#define ET_CLIENT_CHCHANGE 0x15
+#define ET_CLIENT_SWITCHING 0x15
 
 
 /*------- event --------------------------*/
@@ -66,7 +66,9 @@ typedef struct evdata_srvreq	{
 	int ch;
 }evdata_srvreq;
 
-typedef struct evdata_srvreq evdata_chchange;
+typedef struct evdata_client_switching{
+	int chid;
+}evdata_client_switching;
 
 typedef struct evdata_rareq	{
 	int sgid;

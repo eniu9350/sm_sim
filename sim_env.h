@@ -10,7 +10,7 @@ typedef struct sim_env	{
 
 	sm_server* server;
 	
-	sm_client* clients;
+	sm_client** clients;
 	int nclients;
 	
 }sim_env;

@@ -29,9 +29,22 @@ typedef struct ch_info_client	{
 	int size;
 }ch_info_client;
 
+typedef struct sm_client_plan_switching_entry	{
+	int chid;
+	long lasting;
+}sm_client_plan_switching_entry;
+
+typedef struct sm_client_plan	{
+	long arrival;	//arrival time (poweron time)
+	sm_client_plan_switching_entry** switchings;
+	int nswitchings;
+}sm_client_plan;
 
 typedef struct sm_client	{
 	int id;
+
+	//planed switching event
+	sm_client_plan* plan;
 
 	//context_global* gctx;
 
