@@ -75,7 +75,7 @@ typedef struct evdata_srvreq	{
 	int ch;
 }evdata_srvreq;
 
-typedef evdata_srvreq evdata_chchange;
+typedef struct evdata_srvreq evdata_chchange;
 
 typedef struct evdata_rareq	{
 	int sgid;

@@ -108,7 +108,15 @@ void handle_checkhb(ev_loop* el, ev* e)	{
 }
 
 
-void handle_hbrsp(ev_loop* el,ev* e);
-void handle_bcreq(ev_loop* el,ev* e);
-void handle_bcrsp(ev_loop* el,ev* e);
-void handle_srvreq(ev_loop* el,ev* e);
+void handle_hbrsp(ev_loop* el,ev* e)
+{
+}
+void handle_bcreq(ev_loop* el,ev* e)
+{
+}
+void handle_bcrsp(ev_loop* el,ev* e)
+{
+}
+void handle_srvreq(ev_loop* el,ev* e)
+{
+}

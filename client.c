@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "event.h"
+//#include "event.h"
 
 channel_client* channel_info_client_get(channel_info_client* ci, int chid)
 {

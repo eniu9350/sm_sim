@@ -19,7 +19,7 @@
 #define CLIENT_STATE_END 1
 
 
-struct ev;
+//struct ev;
 
 typedef struct channel_client	{
 	int chid;

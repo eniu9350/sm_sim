@@ -1,5 +1,5 @@
-//#ifndef _SM_SIM_SERVER_
-//#define _SM_SIM_SERVER_
+#ifndef _SM_SIM_SERVER_
+#define _SM_SIM_SERVER_
 
 //#include "event.h"
 
@@ -17,4 +17,4 @@ typedef struct server	{
 }server;
 
 
-//#endif
+#endif

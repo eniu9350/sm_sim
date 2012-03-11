@@ -1,8 +1,8 @@
 #ifndef _SM_SIM_COMMON_
 #define _SM_SIM_COMMON_
 
-#include "event.h"
-#include "log.h"
+//#include "event.h"
+//#include "log.h"
 //#include "server.h"
 
 /*------- prop name--------------------------*/
@@ -17,19 +17,19 @@
 #define VALUE_TYPE_STRING 2
 
 
-//struct ev_loop;
-//struct evhandler_table;
+struct ev_loop;
+struct evhandler_table;
 
 /*------- prop container --------------------------*/
-typedef union value	{
+typedef union val	{
 	int type;
 	int n;
 	char s[100];
-}value;
+}val;
 
 typedef struct property	{
 	char k[50];
-	value v;
+	val v;
 }property;
 
 typedef struct properties	{

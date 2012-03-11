@@ -47,7 +47,7 @@ int userlist_expand(userlist* ul);
 /*------- ch ops --------------------------*/
 int channel_join(channel* ch, int uid);
 int channel_leave(channel* ch, int uid);
-void channel_info_get_update_list(channel_info* ci, int* uidlist, int* chlist, int n, channel_update** culist, int* nculist)
+void channel_info_get_update_list(channel_info* ci, int* uidlist, int* chlist, int n, channel_update** culist, int* nculist);
 channel* channel_info_get_by_uid(channel_info* ci, int uid);
 channel* channel_info_get_by_sgid_and_chid(channel_info* ci, int sgid, int chid);
 
