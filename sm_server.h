@@ -4,7 +4,7 @@
 #include "ev_loop.h"
 
 typedef struct sm_server	{
-	ev_loop* el;
+	//ev_loop* el;
 //	hbreq_list* hbreq_buf;
 //	ch_info* ci;
 

@@ -5,6 +5,9 @@
 #include "sm_client.h"
 
 typedef struct sim_env	{
+	ev_loop* el;
+
+
 	sm_server* server;
 	
 	sm_client* clients;
