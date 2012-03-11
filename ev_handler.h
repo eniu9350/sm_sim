@@ -4,9 +4,14 @@
 #include "ev_loop.h"
 #include "ev.h"
 
-void ev_handle_hbreq(ev_loop* el,ev* e);
-void ev_handle_hbreq_client(ev_loop* el,ev* e);
-void ev_handle_checkhb(ev_loop* el, ev* e);
+/*------- server event handler--------------------------*/
+void ev_handle_server_hb_req(ev_loop* el,ev* e);
+void ev_handle_server_hb_resp(ev_loop* el,ev* e);
+void ev_handle_server_check_hb(ev_loop* el, ev* e);
+
+/*------- client event handler--------------------------*/
+void ev_handle_client_hb_req(ev_loop* el,ev* e);
+
 void ev_handle_hbrsp(ev_loop* el,ev* e);
 void ev_handle_bcreq(ev_loop* el,ev* e);
 void ev_handle_bcrsp(ev_loop* el,ev* e);

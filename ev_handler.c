@@ -5,7 +5,7 @@
 
 #include "sim_env.h"
 
-void handle_hbreq(ev_loop* el,ev* e)
+void handle_server_hb_req(ev_loop* el,ev* e)
 {
 	//mmm: tmp
 	//context_global* gctx;
@@ -19,10 +19,15 @@ void handle_hbreq(ev_loop* el,ev* e)
 	}
 	buf->list[buf->size] = e->data;
 	buf->size = buf->size + 1;
-
 }
 
-void handle_hbreq_client(ev_loop* el,ev* e)
+void ev_handle_server_hb_resp(ev_loop* el,ev* e)
+{
+//mmm: not implemented yet
+}
+
+/*------- client event handler--------------------------*/
+void ev_handle_client_hb_req(ev_loop* el,ev* e)
 {
 	ev* newe = (ev*)malloc(sizeof(ev));
 	newe->type = ET_HB_REQ;
@@ -33,7 +38,8 @@ void handle_hbreq_client(ev_loop* el,ev* e)
 	fire_event(el->evlist, newe);
 }
 
-void handle_checkhb(ev_loop* el, ev* e)	{
+void ev_handle_server_check_hb(ev_loop* el, ev* e)
+{
 	ch_update** culist;
 	int nculist = 0;
 	int* uidlist;
