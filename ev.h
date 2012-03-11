@@ -10,11 +10,12 @@
 #define ET_SERVER_RR_REQ 0x06	//res release
 #define ET_SERVER_CHECK_HB 0x07
 
-#define ET_CLIENT_HB_REQ 0x10
-#define ET_CLIENT_HB_RSP 0x11
-#define ET_CLIENT_BC_REQ 0x12
-#define ET_CLIENT_BC_RSP 0x13
-#define ET_CLIENT_CHCHANGE 0x14
+#define ET_CLIENT_POWER_ON 0x10
+#define ET_CLIENT_HB_REQ 0x11
+#define ET_CLIENT_HB_RSP 0x12
+#define ET_CLIENT_BC_REQ 0x13
+#define ET_CLIENT_BC_RSP 0x14
+#define ET_CLIENT_CHCHANGE 0x15
 
 
 /*------- event --------------------------*/
@@ -28,14 +29,25 @@ typedef struct ev	{
 }ev;	//dyn info
 
 /*------- data of concrete event types --------------------------*/
-typedef struct evdata_hbreq	{
+/*------- server event types--------------------------*/
+typedef struct evdata_server_hbreq	{
 	int uid;
 	int ch;	//channel current watching
-}evdata_hbreq;
+}evdata_server_hbreq;
 
-typedef struct evdata_hbrsp	{
+typedef struct evdata_server_hbrsp	{
 	int code;
-}evdata_hbrsp;
+}evdata_server_hbrsp;
+
+typedef struct evdata_server_checkhb	{
+}evdata_server_checkhb;	
+
+/*------- client event types--------------------------*/
+//just a notification for client to send hb req, chid is included in server event
+typedef struct evdata_client_hbreq	{
+//	int uid;
+//	int ch;	//channel current watching
+}evdata_client_hbreq;
 
 typedef struct evdata_bcreq	{
 	//int* chidlist;	//channel current serving
@@ -66,8 +78,6 @@ typedef struct evdata_rrreq	{
 	int chid;
 }evdata_rrreq;
 
-typedef struct evdata_checkhb	{
-}evdata_checkhb;	
 
 
 /*------- event list --------------------------*/

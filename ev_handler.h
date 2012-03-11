@@ -10,6 +10,7 @@ void ev_handle_server_hb_resp(ev_loop* el,ev* e);
 void ev_handle_server_check_hb(ev_loop* el, ev* e);
 
 /*------- client event handler--------------------------*/
+void ev_handle_client_power_on(ev_loop* el, ev* e);
 void ev_handle_client_hb_req(ev_loop* el,ev* e);
 
 void ev_handle_hbrsp(ev_loop* el,ev* e);
