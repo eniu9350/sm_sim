@@ -19,7 +19,7 @@ void handle_hbreq(ev_loop* el,ev* e)
 	}
 	buf->list[buf->size] = e->data;
 	buf->size = buf->size + 1;
-	
+
 }
 
 void handle_hbreq_client(ev_loop* el,ev* e)
@@ -95,10 +95,10 @@ void handle_checkhb(ev_loop* el, ev* e)	{
 			}
 		}
 	}//end for
-	
+
 	for(i=0;i<nculist;i++)	{
 		if(culist[i]->processed==0)	{	//just modify data
-				ch = ch_info_get_by_sgid_and_chid(s->ci, culist[i]->sgid, culist[i]->chid);
+			ch = ch_info_get_by_sgid_and_chid(s->ci, culist[i]->sgid, culist[i]->chid);
 			for(j=0;j<culist[i]->join->size;j++)	{
 				ch_join(ch, culist[i]->join->list[j]);
 			}
@@ -117,7 +117,7 @@ void handle_hbrsp(ev_loop* el,ev* e)
 void handle_bcreq(ev_loop* el,ev* e)
 {
 }
-	
+
 void handle_bcrsp(ev_loop* el,ev* e)
 {
 }
