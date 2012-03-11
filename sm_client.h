@@ -1,5 +1,5 @@
-#ifndef _SM_SIM_CLIENT_
-#define _SM_SIM_CLIENT_
+#ifndef _SM_SIM_SM_CLIENT_
+#define _SM_SIM_SM_CLIENT_
 
 #include "common.h"
 #include "ch.h"
