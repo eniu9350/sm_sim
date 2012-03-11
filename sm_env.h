@@ -12,6 +12,6 @@ typedef struct sim_env	{
 	
 }sim_env;
 
-
+void sim_env_init(sim_env* se);
 
 #endif
