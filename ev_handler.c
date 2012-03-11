@@ -1,13 +1,15 @@
-#include "handler.h"
+#include "ev_handler.h"
 
-#include "common.h"
-#include "ch.h"
+//#include "common.h"
+//#include "ch.h"
+
+#include "sm_env.h"
 
 void handle_hbreq(ev_loop* el,ev* e)
 {
 	//mmm: tmp
-	context_global* gctx;
-	printf("GCTXNULL@handle_hbreq!!!!!!!!!!!!!!!!!!\n");
+	//context_global* gctx;
+	printf("ENV NULL@handle_hbreq!!!!!!!!!!!!!!!!!!\n");
 
 	//save request
 
@@ -111,12 +113,16 @@ void handle_checkhb(ev_loop* el, ev* e)	{
 void handle_hbrsp(ev_loop* el,ev* e)
 {
 }
+
 void handle_bcreq(ev_loop* el,ev* e)
 {
 }
+	
 void handle_bcrsp(ev_loop* el,ev* e)
 {
 }
+
 void handle_srvreq(ev_loop* el,ev* e)
 {
 }
+

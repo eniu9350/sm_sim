@@ -1,15 +1,11 @@
 #ifndef _SM_SIM_CH_
 #define _SM_SIM_CH_
 
-/*------- ch --------------------------*/
+#include "user.h"
+
+/*------- channel --------------------------*/
 typedef struct freq	{
 }freq;
-
-typedef struct userlist	{
-	int* list;
-	int size;
-	int capacity;
-}userlist;
 
 typedef struct channel	{
 	//key = sgid+chid	
@@ -21,6 +17,12 @@ typedef struct channel	{
 	userlist* users;
 }channel;
 
+typedef struct channel_info	{
+	channel* chlist;
+	int size;
+}channel_info;
+
+/*------- channel update --------------------------*/
 typedef struct channel_update	{
 	int sgid;	//not used
 	int chid;
@@ -31,18 +33,6 @@ typedef struct channel_update	{
 	int processed;	//0: not, 1: processed
 }channel_update;
 
-
-typedef struct channel_info	{
-	channel* chlist;
-	int size;
-}channel_info;
-
-
-/*------- userlist ops --------------------------*/
-userlist* userlist_create();
-int userlist_add(userlist* ul, int uid);
-int userlist_remove_by_id(userlist* ul, int uid);
-int userlist_expand(userlist* ul);
 
 /*------- ch ops --------------------------*/
 int channel_join(channel* ch, int uid);
