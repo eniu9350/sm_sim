@@ -34,18 +34,18 @@ void handle_hbreq_client(ev_loop* el,ev* e)
 }
 
 void handle_checkhb(ev_loop* el, ev* e)	{
-	channel_update** culist;
+	ch_update** culist;
 	int nculist = 0;
 	int* uidlist;
 	int* chlist;
 	int n;
-	channel* ch;
+	ch* ch;
 	int i;
 	server* s;
 	ev* e;
 	evdata_rareq* evdata;
 
-	culist = (channel_update**)malloc(1000*sizeof(channel_update*));	//mmm: large enough?
+	culist = (ch_update**)malloc(1000*sizeof(ch_update*));	//mmm: large enough?
 
 	s = (server*)e->agent;	
 	n = s->hbreq_buf->size;
@@ -59,12 +59,12 @@ void handle_checkhb(ev_loop* el, ev* e)	{
 	}
 
 	//get update list
-	channel_info_get_update_list(s->ci, uidlist, chlist, n, culist, &nculist);
+	ch_info_get_update_list(s->ci, uidlist, chlist, n, culist, &nculist);
 
 	//check res alloc and res rel
 	for(i=0;i<nculist;i++)	{
 		if(culist[i]->leave->size == 0)	{
-			if(channel_info_get_by_sgid_and_chid(s->ci, culist[i]->sgid, culist[i]->chid) == NULL)	{//alloc res
+			if(ch_info_get_by_sgid_and_chid(s->ci, culist[i]->sgid, culist[i]->chid) == NULL)	{//alloc res
 				culist[i]->processed = 1;
 				//mmm: should log
 				e = (ev*)malloc(sizeof(ev));
@@ -79,7 +79,7 @@ void handle_checkhb(ev_loop* el, ev* e)	{
 		}
 
 		if(culist[i]->join->size == 0)	{
-			ch = channel_info_get_by_sgid_and_chid(s->ci, culist[i]->sgid, culist[i]->chid);
+			ch = ch_info_get_by_sgid_and_chid(s->ci, culist[i]->sgid, culist[i]->chid);
 			//mmm: heuristics here, right?(forcing a check will gurantee ok)
 			if(ch->users->size == culist[i]->leave->size)	{//rel res
 				culist[i]->processed = 1;
@@ -98,12 +98,12 @@ void handle_checkhb(ev_loop* el, ev* e)	{
 	
 	for(i=0;i<nculist;i++)	{
 		if(culist[i]->processed==0)	{	//just modify data
-				ch = channel_info_get_by_sgid_and_chid(s->ci, culist[i]->sgid, culist[i]->chid);
+				ch = ch_info_get_by_sgid_and_chid(s->ci, culist[i]->sgid, culist[i]->chid);
 			for(j=0;j<culist[i]->join->size;j++)	{
-				channel_join(ch, culist[i]->join->list[j]);
+				ch_join(ch, culist[i]->join->list[j]);
 			}
 			for(j=0;j<culist[i]->leave->size;j++)	{
-				channel_leave(ch, culist[i]->leave->list[j]);
+				ch_leave(ch, culist[i]->leave->list[j]);
 			}
 		}
 	}

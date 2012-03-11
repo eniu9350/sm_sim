@@ -40,7 +40,7 @@ typedef struct evdata_hbrsp	{
 typedef struct evdata_bcreq	{
 	//int* chidlist;	//channel current serving
 	//int chidsize;	//count of channels
-	struct channel_client* chlist;
+	struct ch_client* chlist;
 	int chsize;
 	long life;	//validity time	//mmm: not used yet
 }evdata_bcreq;

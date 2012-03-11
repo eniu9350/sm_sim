@@ -5,7 +5,7 @@
 
 //#include "event.h"
 
-channel_client* channel_info_client_get(channel_info_client* ci, int chid)
+ch_client* ch_info_client_get(ch_info_client* ci, int chid)
 {
 	int i;
 	for(i=0;i<ci->size;i++)	{
@@ -17,7 +17,7 @@ channel_client* channel_info_client_get(channel_info_client* ci, int chid)
 	return NULL;
 }
 
-void channel_info_client_update(channel_info_client* ci, channel_client* chlist, int size, int mode)
+void ch_info_client_update(ch_info_client* ci, ch_client* chlist, int size, int mode)
 {
 	if(mode == CHANNEL_INFO_UPDATE_MODE_OVERWRITE)	{
 		ci->chlist = chlist;
@@ -31,8 +31,8 @@ void client_handle_chchange(ev* e)
 {
 	client* c;	
 	int chid;
-	channel_client* ch;
-	ch = channel_info_client_get(c->ci, chid);
+	ch_client* ch;
+	ch = ch_info_client_get(c->ci, chid);
 	ev* newe;
 	evdata_srvreq* edata;
 	context_global* gctx;
@@ -66,5 +66,5 @@ void client_handle_bcreq(ev* e)
 	c = (client*)e->agent;
 	edata = (evdata_bcreq*)e->data;
 
-	channel_info_client_update(c->ci,  edata->chlist, edata->chsize, CHANNEL_INFO_UPDATE_MODE_OVERWRITE);
+	ch_info_client_update(c->ci,  edata->chlist, edata->chsize, CHANNEL_INFO_UPDATE_MODE_OVERWRITE);
 }

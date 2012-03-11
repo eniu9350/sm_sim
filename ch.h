@@ -7,7 +7,7 @@
 typedef struct freq	{
 }freq;
 
-typedef struct channel	{
+typedef struct ch	{
 	//key = sgid+chid	
 	int sgid;
 	int chid;
@@ -15,15 +15,15 @@ typedef struct channel	{
 	//value = freq+usrlist
 	freq* f;
 	userlist* users;
-}channel;
+}ch;
 
-typedef struct channel_info	{
-	channel* chlist;
+typedef struct ch_info	{
+	ch* chlist;
 	int size;
-}channel_info;
+}ch_info;
 
 /*------- channel update --------------------------*/
-typedef struct channel_update	{
+typedef struct ch_update	{
 	int sgid;	//not used
 	int chid;
 
@@ -31,20 +31,20 @@ typedef struct channel_update	{
 	userlist* join;
 
 	int processed;	//0: not, 1: processed
-}channel_update;
+}ch_update;
 
 
 /*------- ch ops --------------------------*/
-int channel_join(channel* ch, int uid);
-int channel_leave(channel* ch, int uid);
-void channel_info_get_update_list(channel_info* ci, int* uidlist, int* chlist, int n, channel_update** culist, int* nculist);
-channel* channel_info_get_by_uid(channel_info* ci, int uid);
-channel* channel_info_get_by_sgid_and_chid(channel_info* ci, int sgid, int chid);
+int ch_join(ch* c, int uid);
+int ch_leave(ch* c, int uid);
+void ch_info_get_update_list(ch_info* ci, int* uidlist, int* chlist, int n, ch_update** culist, int* nculist);
+ch* ch_info_get_by_uid(ch_info* ci, int uid);
+ch* ch_info_get_by_sgid_and_chid(ch_info* ci, int sgid, int chid);
 
 
 
 /*------- channel_update ops --------------------------*/
-channel_update* channel_update_create();
-void channel_update_add_join(channel_update* cu, int uid);
-void channel_update_add_leave(channel_update* cu, int uid);
+ch_update* ch_update_create();
+void ch_update_add_join(ch_update* cu, int uid);
+void ch_update_add_leave(ch_update* cu, int uid);
 #endif

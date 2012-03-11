@@ -16,18 +16,18 @@
 
 //struct ev;
 
-typedef struct channel_client	{
+typedef struct ch_client	{
 	int chid;
 
 	freq* f;
 	long ts;	//timestamp
-}channel_client;
+}ch_client;
 
 
-typedef struct channel_info_client	{
-	channel_client* chlist;
+typedef struct ch_info_client	{
+	ch_client* chlist;
 	int size;
-}channel_info_client;
+}ch_info_client;
 
 
 typedef struct sm_client	{
@@ -36,7 +36,7 @@ typedef struct sm_client	{
 	//context_global* gctx;
 
 	int ci_update_mode;
-	channel_info_client* ci;
+	ch_info_client* ci;
 
 	int chid;	//current watching
 
@@ -46,8 +46,8 @@ typedef struct sm_client	{
 
 
 /*------- channel ops--------------------------*/
-channel_client* channel_info_client_get(channel_info_client* ci, int chid);
-void channel_info_client_update(channel_info_client* ci, channel_client* chlist, int size, int mode);
+ch_client* ch_info_client_get(ch_info_client* ci, int chid);
+void ch_info_client_update(ch_info_client* ci, ch_client* chlist, int size, int mode);
 
 
 /*------- event handler--------------------------*/
