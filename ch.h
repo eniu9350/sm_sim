@@ -17,10 +17,24 @@ typedef struct ch	{
 	userlist* users;
 }ch;
 
+typedef struct ch_client	{
+	//mmm: current no sgid
+	int chid;
+
+	freq* f;
+	long ts;	//timestamp
+}ch_client;
+
 typedef struct ch_info	{
-	ch* chlist;
+	ch** chlist;	//mmm: changed from * to **, ok?
 	int size;
 }ch_info;
+
+typedef struct ch_info_client	{
+	ch_client** chlist;	//mmm: chaned from * to **, ok?
+	int size;
+}ch_info_client;
+
 
 /*------- channel update --------------------------*/
 typedef struct ch_update	{

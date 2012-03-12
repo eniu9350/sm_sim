@@ -15,20 +15,6 @@
 
 
 //struct ev;
-
-typedef struct ch_client	{
-	int chid;
-
-	freq* f;
-	long ts;	//timestamp
-}ch_client;
-
-
-typedef struct ch_info_client	{
-	ch_client** chlist;	//mmm: chaned from * to **, ok?
-	int size;
-}ch_info_client;
-
 typedef struct sm_client_plan_switching_entry	{
 	int chid;
 	long lasting;

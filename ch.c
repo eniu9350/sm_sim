@@ -111,13 +111,13 @@ ch* ch_info_get_by_uid(ch_info* ci, int uid)
 {
 	int i,j;
 	for(i=0;i<ci->size;i++)	{
-		if(ci->chlist[i].users==NULL)	{
+		if(ci->chlist[i]->users==NULL)	{
 			perror("userlist in ch null!\n");
 			return NULL;
 		}
-		for(j=0;j<ci->chlist[i].users->size;j++)	{
-			if(ci->chlist[i].users->list[j] == uid)	{
-				return &(ci->chlist[i]);
+		for(j=0;j<ci->chlist[i]->users->size;j++)	{
+			if(ci->chlist[i]->users->list[j] == uid)	{
+				return ci->chlist[i];
 			}
 		}
 	}
@@ -130,8 +130,8 @@ ch* ch_info_get_by_sgid_and_chid(ch_info* ci, int sgid, int chid)
 {
 	int i;
 	for(i=0;i<ci->size;i++)	{
-		if(ci->chlist[i].sgid == sgid && ci->chlist[i].chid == chid)	{
-			return &(ci->chlist[i]);
+		if(ci->chlist[i]->sgid == sgid && ci->chlist[i]->chid == chid)	{
+			return ci->chlist[i];
 		}
 	}
 	return NULL;

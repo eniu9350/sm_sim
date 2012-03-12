@@ -1,6 +1,9 @@
 #ifndef _SM_SIM_EV_
 #define _SM_SIM_EV_
 
+#include "ch.h"
+
+
 #define ET_SERVER_HB_REQ 0x00
 #define ET_SERVER_HB_RSP 0x01
 #define ET_SERVER_BC_REQ 0x02
@@ -52,6 +55,11 @@ typedef struct evdata_client_hb_req	{
 //	int uid;
 //	int ch;	//channel current watching
 }evdata_client_hb_req;
+
+typedef struct evdata_client_bc_req	{
+	ch_client** chlist;
+	int size;
+}evdata_client_bc_req;
 
 typedef struct evdata_client_srv_req	{
 	int uid;

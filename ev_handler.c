@@ -8,7 +8,8 @@
 
 extern sim_env se;	//mmm: trival --- right?
 
-void handle_server_hb_req(ev_loop* el,ev* e)
+/*------- server event handler--------------------------*/
+void ev_handle_server_hb_req(ev_loop* el,ev* e)
 {
 	/*
 	//mmm: tmp
@@ -31,82 +32,135 @@ void ev_handle_server_hb_resp(ev_loop* el,ev* e)
 	//mmm: not implemented yet
 }
 
+void ev_handle_server_bc_req(ev_loop* el, ev* e)
+{
+	sm_server* server;
+	sm_client* client;
+	ev* newe;
+	evdata_client_bc_req* ed;
+	ch_client** chlist;	//chlist sent to client
+	long ltemp;
+	int i;
+
+	server = se.server;
+
+	chlist = (ch_client**)malloc(server->ci->size*sizeof(ch_client*));
+	for(i=0;i<server->ci->size;i++)	{
+		chlist[i] = (ch_client*)malloc(sizeof(ch_client));
+		chlist[i]->chid = server->ci->chlist[i]->chid;
+		chlist[i]->f = server->ci->chlist[i]->f;	//mmm: should copy?
+	}
+
+	ed = (evdata_client_bc_req*)malloc(sizeof(evdata_client_bc_req));
+	ed->chlist = chlist;
+	ed->size = server->ci->size;
+
+	//mmm: constant server bc req -> client bc req	
+	ltemp = 1;
+
+
+	for(i=0;i<se.nclients;i++)	{
+		client = se.clients[i];
+		if(client->state != CLIENT_STATE_END)	{
+			newe = ev_create(ET_CLIENT_BC_REQ, el->now+1);
+			newe->data = (void*)ed;
+			newe->agent = (void*)client;
+			ev_list_add(el->evlist, newe);
+		}
+	}
+
+}
+
+void ev_handle_client_bc_req(ev_loop* el, ev* e)
+{
+	sm_client* client;
+	evdata_client_bc_req* ed;	
+
+	ed = (evdata_client_bc_req*)e->data;
+
+	client = (sm_client*)e->agent;
+
+	//update local ch list
+	client->ci->chlist = ed->chlist;
+	client->ci->size = ed->size;
+}
+
 void ev_handle_server_check_hb(ev_loop* el, ev* e)
 {
 	/*
-	ch_update** culist;
-	int nculist = 0;
-	int* uidlist;
-	int* chlist;
-	int n;
-	ch* ch;
-	int i;
-	server* s;
-	ev* e;
-	evdata_rareq* evdata;
+		 ch_update** culist;
+		 int nculist = 0;
+		 int* uidlist;
+		 int* chlist;
+		 int n;
+		 ch* ch;
+		 int i;
+		 server* s;
+		 ev* e;
+		 evdata_rareq* evdata;
 
-	culist = (ch_update**)malloc(1000*sizeof(ch_update*));	//mmm: large enough?
+		 culist = (ch_update**)malloc(1000*sizeof(ch_update*));	//mmm: large enough?
 
-	s = (server*)e->agent;	
-	n = s->hbreq_buf->size;
-	uidlist = (int*)malloc(n*sizeof(int));
-	chlist = (int*)malloc(n*sizeof(int));
+		 s = (server*)e->agent;	
+		 n = s->hbreq_buf->size;
+		 uidlist = (int*)malloc(n*sizeof(int));
+		 chlist = (int*)malloc(n*sizeof(int));
 
 
-	for(i=0;i<n;i++)	{
-		uidlist[i] = s->hbreq_buf->list[i]->uid;
-		chlist[i] = s->hbreq_buf->list[i]->ch;
-	}
+		 for(i=0;i<n;i++)	{
+		 uidlist[i] = s->hbreq_buf->list[i]->uid;
+		 chlist[i] = s->hbreq_buf->list[i]->ch;
+		 }
 
 	//get update list
 	ch_info_get_update_list(s->ci, uidlist, chlist, n, culist, &nculist);
 
 	//check res alloc and res rel
 	for(i=0;i<nculist;i++)	{
-		if(culist[i]->leave->size == 0)	{
-			if(ch_info_get_by_sgid_and_chid(s->ci, culist[i]->sgid, culist[i]->chid) == NULL)	{//alloc res
-				culist[i]->processed = 1;
-				//mmm: should log
-				e = (ev*)malloc(sizeof(ev));
-				e->type = ET_RA_REQ;
-				e->agent = server;
-				evdata = (evdata_rareq*)malloc(sizeof(evdata_rareq));
-				evdata->sgid = culist[i]->sgid;
-				evdata->chid = culist[i]->chid;
-				e->data = evdata;
-				fire_event(el->evlist, evdata);
-			}
-		}
+	if(culist[i]->leave->size == 0)	{
+	if(ch_info_get_by_sgid_and_chid(s->ci, culist[i]->sgid, culist[i]->chid) == NULL)	{//alloc res
+	culist[i]->processed = 1;
+	//mmm: should log
+	e = (ev*)malloc(sizeof(ev));
+	e->type = ET_RA_REQ;
+	e->agent = server;
+	evdata = (evdata_rareq*)malloc(sizeof(evdata_rareq));
+	evdata->sgid = culist[i]->sgid;
+	evdata->chid = culist[i]->chid;
+	e->data = evdata;
+	fire_event(el->evlist, evdata);
+	}
+	}
 
-		if(culist[i]->join->size == 0)	{
-			ch = ch_info_get_by_sgid_and_chid(s->ci, culist[i]->sgid, culist[i]->chid);
-			//mmm: heuristics here, right?(forcing a check will gurantee ok)
-			if(ch->users->size == culist[i]->leave->size)	{//rel res
-				culist[i]->processed = 1;
-				//mmm: should log
-				e = (ev*)malloc(sizeof(ev));
-				e->type = ET_RR_REQ;
-				e->agent = server;
-				evdata = (evdata_rrreq*)malloc(sizeof(evdata_rrreq));
-				evdata->sgid = culist[i]->sgid;
-				evdata->chid = culist[i]->chid;
-				e->data = evdata;
-				fire_event(el->evlist, evdata);
-			}
-		}
+	if(culist[i]->join->size == 0)	{
+	ch = ch_info_get_by_sgid_and_chid(s->ci, culist[i]->sgid, culist[i]->chid);
+	//mmm: heuristics here, right?(forcing a check will gurantee ok)
+	if(ch->users->size == culist[i]->leave->size)	{//rel res
+	culist[i]->processed = 1;
+	//mmm: should log
+	e = (ev*)malloc(sizeof(ev));
+	e->type = ET_RR_REQ;
+	e->agent = server;
+	evdata = (evdata_rrreq*)malloc(sizeof(evdata_rrreq));
+	evdata->sgid = culist[i]->sgid;
+	evdata->chid = culist[i]->chid;
+	e->data = evdata;
+	fire_event(el->evlist, evdata);
+	}
+	}
 	}//end for
 
 	for(i=0;i<nculist;i++)	{
-		if(culist[i]->processed==0)	{	//just modify data
-			ch = ch_info_get_by_sgid_and_chid(s->ci, culist[i]->sgid, culist[i]->chid);
-			for(j=0;j<culist[i]->join->size;j++)	{
-				ch_join(ch, culist[i]->join->list[j]);
-			}
-			for(j=0;j<culist[i]->leave->size;j++)	{
-				ch_leave(ch, culist[i]->leave->list[j]);
-			}
-		}
+	if(culist[i]->processed==0)	{	//just modify data
+	ch = ch_info_get_by_sgid_and_chid(s->ci, culist[i]->sgid, culist[i]->chid);
+	for(j=0;j<culist[i]->join->size;j++)	{
+	ch_join(ch, culist[i]->join->list[j]);
 	}
+	for(j=0;j<culist[i]->leave->size;j++)	{
+	ch_leave(ch, culist[i]->leave->list[j]);
+}
+}
+}
 */
 }
 
@@ -135,14 +189,14 @@ void ev_handle_client_hb_req(ev_loop* el,ev* e)
 	ev_list_add(el->evlist, newe);
 
 	/*
-	ev* newe = (ev*)malloc(sizeof(ev));
-	newe->type = ET_HB_REQ;
-	newe->time = e->time + T_TRAN;
-	newe->data = e->data;
-	newe->agent = e->agent;
+		 ev* newe = (ev*)malloc(sizeof(ev));
+		 newe->type = ET_HB_REQ;
+		 newe->time = e->time + T_TRAN;
+		 newe->data = e->data;
+		 newe->agent = e->agent;
 
-	fire_event(el->evlist, newe);
-	*/
+		 fire_event(el->evlist, newe);
+		 */
 }
 
 void ev_handle_client_switching(ev_loop* el, ev* e)
