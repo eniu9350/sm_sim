@@ -40,6 +40,9 @@ typedef struct evdata_server_hbrsp	{
 	int code;
 }evdata_server_hbrsp;
 
+typedef struct evdata_server_bc_req	{
+}evdata_server_bc_req;	//just a notification
+
 typedef struct evdata_server_checkhb	{
 }evdata_server_checkhb;	
 
@@ -54,18 +57,6 @@ typedef struct evdata_client_srv_req	{
 	int uid;
 	int ch;
 }evdata_client_srv_req;
-
-typedef struct evdata_bcreq	{
-	//int* chidlist;	//channel current serving
-	//int chidsize;	//count of channels
-	struct ch_client* chlist;
-	int chsize;
-	long life;	//validity time	//mmm: not used yet
-}evdata_bcreq;
-
-typedef struct evdata_bcrsp	{
-	int code;
-}evdata_bcrsp;
 
 
 typedef struct evdata_client_switching{

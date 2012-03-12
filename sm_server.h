@@ -8,6 +8,9 @@
 typedef struct sm_server	{
 	//ev_loop* el;
 //	hbreq_list* hbreq_buf;
+	long start;
+	long end;
+	
 	ch_info* ci;
 
 }sm_server;
