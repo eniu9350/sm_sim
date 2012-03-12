@@ -25,7 +25,7 @@ typedef struct ch_client	{
 
 
 typedef struct ch_info_client	{
-	ch_client* chlist;
+	ch_client** chlist;	//mmm: chaned from * to **, ok?
 	int size;
 }ch_info_client;
 

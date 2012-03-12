@@ -26,23 +26,6 @@ void ev_handle_server_hb_resp(ev_loop* el,ev* e)
 //mmm: not implemented yet
 }
 
-/*------- client event handler--------------------------*/
-void ev_handle_client_power_on(ev_loop* el, ev* e)
-{
-	
-}
-
-void ev_handle_client_hb_req(ev_loop* el,ev* e)
-{
-	ev* newe = (ev*)malloc(sizeof(ev));
-	newe->type = ET_HB_REQ;
-	newe->time = e->time + T_TRAN;
-	newe->data = e->data;
-	newe->agent = e->agent;
-
-	fire_event(el->evlist, newe);
-}
-
 void ev_handle_server_check_hb(ev_loop* el, ev* e)
 {
 	ch_update** culist;
@@ -120,6 +103,60 @@ void ev_handle_server_check_hb(ev_loop* el, ev* e)
 	}
 }
 
+/*------- client event handler--------------------------*/
+void ev_handle_client_power_on(ev_loop* el, ev* e)
+{
+	
+}
+
+void ev_handle_client_hb_req(ev_loop* el,ev* e)
+{
+	ev* newe = (ev*)malloc(sizeof(ev));
+	newe->type = ET_HB_REQ;
+	newe->time = e->time + T_TRAN;
+	newe->data = e->data;
+	newe->agent = e->agent;
+
+	fire_event(el->evlist, newe);
+}
+
+void ev_handle_client_switching(ev_loop* el, ev* e)
+{
+	evdata_client_switching* ed_cs;
+	sm_client* client;
+	ev* newe;
+	evdata_client_srv_req* ed_csr;
+	int chid;
+	int i;
+	long ltemp;
+	client = (client*)e->agent;
+	ed_cs = (evdata_client_switching*)e->data;
+	chid = ed_cs->chiid;
+
+	for(i=0;i<client->ci->size;i++)	{
+		if(client->ci->chlist[i]->chid == chid)	{
+			break;
+		}
+	}
+
+	if(i==client->ci->size) {	//chid not in local channel list, need to send request
+		//mmm: constant---- switching->channelchange
+		ltemp = 1;
+		newe = ev_create(ET_SERVER_SRV_REQ, el->now+ltemp); 
+		ed_csr = (evdata_client_srv_req*)malloc(sizeof(evdata_client_srv_req));
+		ed_csr->uid = client->id;
+		ed_csr->chid = chid;
+		newe->data = (void*)ed_csr;
+		newe->agent = (void*)client;
+
+		ev_list_add(el->evlist, newe);
+	}
+	else	{	// chid in local channel list, no need to send request, just change current chid
+		client->chid = chid;
+		//mmm: some logging(indicating that the user starts receiving media stream of some channel)
+	}
+
+}
 
 void handle_hbrsp(ev_loop* el,ev* e)
 {

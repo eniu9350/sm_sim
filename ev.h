@@ -36,15 +36,15 @@ typedef struct evdata_server_hb_req	{
 	int ch;	//channel current watching
 }evdata_server_hb_req;
 
-typedef struct evdata_server_hbrsp	{
+typedef struct evdata_server_hb_rsp	{
 	int code;
-}evdata_server_hbrsp;
+}evdata_server_hb_rsp;
 
 typedef struct evdata_server_bc_req	{
 }evdata_server_bc_req;	//just a notification
 
-typedef struct evdata_server_checkhb	{
-}evdata_server_checkhb;	
+typedef struct evdata_server_check_hb	{
+}evdata_server_check_hb;	
 
 /*------- client event types--------------------------*/
 //just a notification for client to send hb req, chid is included in server event
@@ -55,9 +55,8 @@ typedef struct evdata_client_hb_req	{
 
 typedef struct evdata_client_srv_req	{
 	int uid;
-	int ch;
+	int chid;
 }evdata_client_srv_req;
-
 
 typedef struct evdata_client_switching{
 	int chid;
