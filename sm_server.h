@@ -13,6 +13,8 @@ typedef struct sm_server	{
 	
 	ch_info* ci;
 
+	evdata_server_hb_req_list* buf_hb_req;
+
 }sm_server;
 
 

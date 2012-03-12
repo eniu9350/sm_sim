@@ -87,81 +87,81 @@ void ev_handle_client_bc_req(ev_loop* el, ev* e)
 
 void ev_handle_server_check_hb(ev_loop* el, ev* e)
 {
-	/*
-		 ch_update** culist;
-		 int nculist = 0;
-		 int* uidlist;
-		 int* chlist;
-		 int n;
-		 ch* ch;
-		 int i;
-		 server* s;
-		 ev* e;
-		 evdata_rareq* evdata;
+	ch_update** culist;
+	int nculist = 0;
+	int* uidlist;
+	int* chlist;
+	int n;
+	ch* ch;
+	int i,j;
+	sm_server* server;
+	ev* newe;
+	evdata_server_ra_req* ed_ra;
+	evdata_server_rr_req* ed_rr;
+	long ltemp;
 
-		 culist = (ch_update**)malloc(1000*sizeof(ch_update*));	//mmm: large enough?
+	culist = (ch_update**)malloc(1000*sizeof(ch_update*));	//mmm: large enough?
 
-		 s = (server*)e->agent;	
-		 n = s->hbreq_buf->size;
-		 uidlist = (int*)malloc(n*sizeof(int));
-		 chlist = (int*)malloc(n*sizeof(int));
+	server = (sm_server*)e->agent;	
+	n = server->buf_hb_req->size;
+	uidlist = (int*)malloc(n*sizeof(int));
+	chlist = (int*)malloc(n*sizeof(int));
 
 
-		 for(i=0;i<n;i++)	{
-		 uidlist[i] = s->hbreq_buf->list[i]->uid;
-		 chlist[i] = s->hbreq_buf->list[i]->ch;
-		 }
+	for(i=0;i<n;i++)	{
+		uidlist[i] = server->buf_hb_req->list[i]->uid;
+		chlist[i] = server->buf_hb_req->list[i]->chid;
+	}
 
 	//get update list
-	ch_info_get_update_list(s->ci, uidlist, chlist, n, culist, &nculist);
+	ch_info_get_update_list(server->ci, uidlist, chlist, n, culist, &nculist);
 
 	//check res alloc and res rel
 	for(i=0;i<nculist;i++)	{
-	if(culist[i]->leave->size == 0)	{
-	if(ch_info_get_by_sgid_and_chid(s->ci, culist[i]->sgid, culist[i]->chid) == NULL)	{//alloc res
-	culist[i]->processed = 1;
-	//mmm: should log
-	e = (ev*)malloc(sizeof(ev));
-	e->type = ET_RA_REQ;
-	e->agent = server;
-	evdata = (evdata_rareq*)malloc(sizeof(evdata_rareq));
-	evdata->sgid = culist[i]->sgid;
-	evdata->chid = culist[i]->chid;
-	e->data = evdata;
-	fire_event(el->evlist, evdata);
-	}
-	}
+		if(culist[i]->leave->size == 0)	{
+			if(ch_info_get_by_sgid_and_chid(server->ci, culist[i]->sgid, culist[i]->chid) == NULL)	{//alloc res
+				culist[i]->processed = 1;
+				//mmm: should log
+				ltemp = 1;	//mmm: constant alloc -> ra req
+				newe = ev_create(ET_SERVER_RA_REQ, el->now+ltemp);
+				newe->agent = (void*)server;
+				ed_ra = (evdata_server_ra_req*)malloc(sizeof(evdata_server_ra_req));
+				ed_ra->sgid = culist[i]->sgid;
+				ed_ra->chid = culist[i]->chid;
+				newe->data = ed_ra;
+				ev_list_add(el->evlist, newe);
+			}
+		}
 
-	if(culist[i]->join->size == 0)	{
-	ch = ch_info_get_by_sgid_and_chid(s->ci, culist[i]->sgid, culist[i]->chid);
-	//mmm: heuristics here, right?(forcing a check will gurantee ok)
-	if(ch->users->size == culist[i]->leave->size)	{//rel res
-	culist[i]->processed = 1;
-	//mmm: should log
-	e = (ev*)malloc(sizeof(ev));
-	e->type = ET_RR_REQ;
-	e->agent = server;
-	evdata = (evdata_rrreq*)malloc(sizeof(evdata_rrreq));
-	evdata->sgid = culist[i]->sgid;
-	evdata->chid = culist[i]->chid;
-	e->data = evdata;
-	fire_event(el->evlist, evdata);
-	}
-	}
+		if(culist[i]->join->size == 0)	{
+			ch = ch_info_get_by_sgid_and_chid(server->ci, culist[i]->sgid, culist[i]->chid);
+			//mmm: heuristics here, right?(forcing a check will gurantee ok)
+			if(ch->users->size == culist[i]->leave->size)	{//rel res
+				culist[i]->processed = 1;
+				//mmm: should log
+				newe = (ev*)malloc(sizeof(ev));
+				newe->type = ET_SERVER_RR_REQ;
+				newe->agent = server;
+				ed_rr = (evdata_server_rr_req*)malloc(sizeof(evdata_server_rr_req));
+				ed_rr->sgid = culist[i]->sgid;
+				ed_rr->chid = culist[i]->chid;
+				newe->data = ed_rr;
+				ev_list_add(el->evlist, newe);
+			}
+		}
 	}//end for
 
 	for(i=0;i<nculist;i++)	{
-	if(culist[i]->processed==0)	{	//just modify data
-	ch = ch_info_get_by_sgid_and_chid(s->ci, culist[i]->sgid, culist[i]->chid);
-	for(j=0;j<culist[i]->join->size;j++)	{
-	ch_join(ch, culist[i]->join->list[j]);
+		if(culist[i]->processed==0)	{	//just modify data
+			ch = ch_info_get_by_sgid_and_chid(server->ci, culist[i]->sgid, culist[i]->chid);
+			for(j=0;j<culist[i]->join->size;j++)	{
+				ch_join(ch, culist[i]->join->list[j]);
+			}
+			for(j=0;j<culist[i]->leave->size;j++)	{
+				ch_leave(ch, culist[i]->leave->list[j]);
+			}
+		}
 	}
-	for(j=0;j<culist[i]->leave->size;j++)	{
-	ch_leave(ch, culist[i]->leave->list[j]);
-}
-}
-}
-*/
 }
 
 /*------- client event handler--------------------------*/

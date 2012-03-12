@@ -39,12 +39,28 @@ typedef struct evdata_server_hb_req	{
 	int chid;	//channel current watching
 }evdata_server_hb_req;
 
+typedef struct evdata_server_hb_req_list	{
+	struct evdata_server_hb_req** list;
+	int size;
+	int capacity;
+}evdata_server_hb_req_list;
+
 typedef struct evdata_server_hb_rsp	{
 	int code;
 }evdata_server_hb_rsp;
 
 typedef struct evdata_server_bc_req	{
 }evdata_server_bc_req;	//just a notification
+
+typedef struct evdata_server_ra_req	{
+	int sgid;
+	int chid;
+}evdata_server_ra_req;
+
+typedef struct evdata_server_rr_req	{
+	int sgid;
+	int chid;
+}evdata_server_rr_req;
 
 typedef struct evdata_server_check_hb	{
 }evdata_server_check_hb;	
@@ -70,15 +86,7 @@ typedef struct evdata_client_switching{
 	int chid;
 }evdata_client_switching;
 
-typedef struct evdata_rareq	{
-	int sgid;
-	int chid;
-}evdata_rareq;
 
-typedef struct evdata_rrreq	{
-	int sgid;
-	int chid;
-}evdata_rrreq;
 
 
 
