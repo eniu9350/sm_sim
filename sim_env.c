@@ -7,7 +7,8 @@
 void sim_env_init(sim_env* se)
 {
 	int i, j;
-	long temp;
+	long ltemp;
+	int itemp;
 	ev* e;
 	evdata_client_switching* evdata_cs;
 	//mmm: not implemented yet!
@@ -15,23 +16,28 @@ void sim_env_init(sim_env* se)
 
 	/*-- add client channel change event--*/
 	for(i=0;i<se->nclients;i++)	{
-		temp = se->clients[i]->plan->arrival;
+		ltemp = se->clients[i]->plan->arrival;
 		for(j=0;j<se->clients[i]->plan->nswitchings;j++)	{
 			if(j==0)	{
 				//mmm: not implemented
 				//not switching
 			}
 			else	{
-				e = ev_create(ET_CLIENT_SWITCHING, temp);
+				e = ev_create(ET_CLIENT_SWITCHING, ltemp);
 				evdata_cs = (evdata_client_switching*)malloc(sizeof(evdata_client_switching));
 				evdata_cs->chid = se->clients[i]->plan->switchings[j]->chid;
 				e->data = (void*)evdata_cs;
 				e->agent = (void*)se->clients[i];
 			}
-			temp += se->clients[i]->plan->switchings[j]->lasting;
+			ltemp += se->clients[i]->plan->switchings[j]->lasting;
 
 			ev_list_add(se->el->evlist, e);
 		}
 	}
 
+	/*-- add client heartbeat event--*/
+	ltemp = 30;	//hb interval
+	
+
+	
 }
