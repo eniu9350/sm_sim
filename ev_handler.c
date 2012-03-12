@@ -4,9 +4,11 @@
 //#include "ch.h"
 
 #include "sim_env.h"
+#include <stdlib.h>
 
 void handle_server_hb_req(ev_loop* el,ev* e)
 {
+	/*
 	//mmm: tmp
 	//context_global* gctx;
 	printf("ENV NULL@handle_hbreq!!!!!!!!!!!!!!!!!!\n");
@@ -19,15 +21,17 @@ void handle_server_hb_req(ev_loop* el,ev* e)
 	}
 	buf->list[buf->size] = e->data;
 	buf->size = buf->size + 1;
+	*/
 }
 
 void ev_handle_server_hb_resp(ev_loop* el,ev* e)
 {
-//mmm: not implemented yet
+	//mmm: not implemented yet
 }
 
 void ev_handle_server_check_hb(ev_loop* el, ev* e)
 {
+	/*
 	ch_update** culist;
 	int nculist = 0;
 	int* uidlist;
@@ -101,16 +105,18 @@ void ev_handle_server_check_hb(ev_loop* el, ev* e)
 			}
 		}
 	}
+*/
 }
 
 /*------- client event handler--------------------------*/
 void ev_handle_client_power_on(ev_loop* el, ev* e)
 {
-	
+
 }
 
 void ev_handle_client_hb_req(ev_loop* el,ev* e)
 {
+	/*
 	ev* newe = (ev*)malloc(sizeof(ev));
 	newe->type = ET_HB_REQ;
 	newe->time = e->time + T_TRAN;
@@ -118,6 +124,7 @@ void ev_handle_client_hb_req(ev_loop* el,ev* e)
 	newe->agent = e->agent;
 
 	fire_event(el->evlist, newe);
+	*/
 }
 
 void ev_handle_client_switching(ev_loop* el, ev* e)
@@ -129,9 +136,9 @@ void ev_handle_client_switching(ev_loop* el, ev* e)
 	int chid;
 	int i;
 	long ltemp;
-	client = (client*)e->agent;
+	client = (sm_client*)e->agent;
 	ed_cs = (evdata_client_switching*)e->data;
-	chid = ed_cs->chiid;
+	chid = ed_cs->chid;
 
 	for(i=0;i<client->ci->size;i++)	{
 		if(client->ci->chlist[i]->chid == chid)	{
@@ -155,7 +162,6 @@ void ev_handle_client_switching(ev_loop* el, ev* e)
 		client->chid = chid;
 		//mmm: some logging(indicating that the user starts receiving media stream of some channel)
 	}
-
 }
 
 void handle_hbrsp(ev_loop* el,ev* e)
