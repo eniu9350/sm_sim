@@ -16,6 +16,7 @@
 #define ET_CLIENT_BC_REQ 0x13
 #define ET_CLIENT_BC_RSP 0x14
 #define ET_CLIENT_SWITCHING 0x15
+#define ET_CLIENT_SRV_REQ 0x16
 
 
 /*------- event --------------------------*/
@@ -30,10 +31,10 @@ typedef struct ev	{
 
 /*------- data of concrete event types --------------------------*/
 /*------- server event types--------------------------*/
-typedef struct evdata_server_hbreq	{
+typedef struct evdata_server_hb_req	{
 	int uid;
 	int ch;	//channel current watching
-}evdata_server_hbreq;
+}evdata_server_hb_req;
 
 typedef struct evdata_server_hbrsp	{
 	int code;
@@ -44,10 +45,15 @@ typedef struct evdata_server_checkhb	{
 
 /*------- client event types--------------------------*/
 //just a notification for client to send hb req, chid is included in server event
-typedef struct evdata_client_hbreq	{
+typedef struct evdata_client_hb_req	{
 //	int uid;
 //	int ch;	//channel current watching
-}evdata_client_hbreq;
+}evdata_client_hb_req;
+
+typedef struct evdata_client_srv_req	{
+	int uid;
+	int ch;
+}evdata_client_srv_req;
 
 typedef struct evdata_bcreq	{
 	//int* chidlist;	//channel current serving
@@ -61,10 +67,6 @@ typedef struct evdata_bcrsp	{
 	int code;
 }evdata_bcrsp;
 
-typedef struct evdata_srvreq	{
-	int uid;
-	int ch;
-}evdata_srvreq;
 
 typedef struct evdata_client_switching{
 	int chid;

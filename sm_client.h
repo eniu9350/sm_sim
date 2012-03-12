@@ -38,6 +38,7 @@ typedef struct sm_client_plan	{
 	long arrival;	//arrival time (poweron time)
 	sm_client_plan_switching_entry** switchings;
 	int nswitchings;
+	long departure;	//mmm: the time when last switching ends, just for convinience
 }sm_client_plan;
 
 typedef struct sm_client	{
