@@ -33,7 +33,7 @@ typedef struct ev	{
 /*------- server event types--------------------------*/
 typedef struct evdata_server_hb_req	{
 	int uid;
-	int ch;	//channel current watching
+	int chid;	//channel current watching
 }evdata_server_hb_req;
 
 typedef struct evdata_server_hb_rsp	{

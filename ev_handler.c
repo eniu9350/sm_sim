@@ -6,6 +6,8 @@
 #include "sim_env.h"
 #include <stdlib.h>
 
+extern sim_env se;	//mmm: trival --- right?
+
 void handle_server_hb_req(ev_loop* el,ev* e)
 {
 	/*
@@ -17,7 +19,7 @@ void handle_server_hb_req(ev_loop* el,ev* e)
 
 	hbreq_list* buf = gctx->server->hbreq_buf;
 	if(buf->size==buf->capacity)	{
-		printf("buf capacity exceeded @ handle_hbreq!!!!!!!!!!!\n");
+	printf("buf capacity exceeded @ handle_hbreq!!!!!!!!!!!\n");
 	}
 	buf->list[buf->size] = e->data;
 	buf->size = buf->size + 1;
@@ -116,6 +118,22 @@ void ev_handle_client_power_on(ev_loop* el, ev* e)
 
 void ev_handle_client_hb_req(ev_loop* el,ev* e)
 {
+	long ltemp;
+	ev* newe;
+	evdata_server_hb_req* ed;
+	sm_client* client;
+
+	client = (sm_client*)e->agent;
+	ltemp = 1;	//mmm: constant client hb -> server hb
+	newe = ev_create(ET_SERVER_HB_REQ, el->now+ltemp);
+	ed = (evdata_server_hb_req*)malloc(sizeof(evdata_server_hb_req));
+	ed->uid = client->id;
+	ed->chid = client->chid;	//mmm: any change after that?
+	newe->data = (void*)ed;
+	newe->agent = (void*)se.server;
+
+	ev_list_add(el->evlist, newe);
+
 	/*
 	ev* newe = (ev*)malloc(sizeof(ev));
 	newe->type = ET_HB_REQ;
