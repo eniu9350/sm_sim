@@ -2,6 +2,7 @@
 #define _SM_SIM_SM_CLIENT_
 
 
+#include "ev.h"
 #include "ch.h"
 
 //#define ET_CLIENT_SRV_REQ 4
@@ -47,10 +48,12 @@ typedef struct sm_client	{
 
 /*------- channel ops--------------------------*/
 ch_client* ch_info_client_get(ch_info_client* ci, int chid);
-void ch_info_client_update(ch_info_client* ci, ch_client* chlist, int size, int mode);
+void ch_info_client_update(ch_info_client* ci, ch_client** chlist, int size, int mode);
 
 
 /*------- event handler--------------------------*/
-void client_handle_chchange(struct ev* e);
+/*
+void client_handle_chchange(ev* e);
 void client_handle_bcreq(struct ev* e);
+*/
 #endif
