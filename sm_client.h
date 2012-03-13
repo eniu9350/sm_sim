@@ -18,7 +18,7 @@
 //struct ev;
 typedef struct sm_client_plan_switching_entry	{
 	int chid;
-	long lasting;
+	long duration;
 }sm_client_plan_switching_entry;
 
 typedef struct sm_client_plan	{

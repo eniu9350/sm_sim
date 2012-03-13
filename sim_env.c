@@ -34,7 +34,7 @@ void sim_env_init(sim_env* se)
 				e->data = (void*)ed_cs;
 				e->agent = (void*)client;
 			}
-			ltemp += client->plan->switchings[j]->lasting;
+			ltemp += client->plan->switchings[j]->duration;
 
 			ev_list_add(se->el->evlist, e);
 		}
