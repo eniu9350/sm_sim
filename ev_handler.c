@@ -11,6 +11,7 @@ extern sim_env se;	//mmm: trival --- right?
 /*------- server event handler--------------------------*/
 void ev_handle_server_hb_req(ev_loop* el,ev* e)
 {
+	printf("ev_handle_server_hb_req\n");
 	/*
 	//mmm: tmp
 	//context_global* gctx;
@@ -30,10 +31,12 @@ void ev_handle_server_hb_req(ev_loop* el,ev* e)
 void ev_handle_server_hb_resp(ev_loop* el,ev* e)
 {
 	//mmm: not implemented yet
+	printf("ev_handle_server_hb_resp\n");
 }
 
 void ev_handle_server_bc_req(ev_loop* el, ev* e)
 {
+	printf("ev_handle_server_bc_req\n");
 	sm_server* server;
 	sm_client* client;
 	ev* newe;
@@ -73,6 +76,7 @@ void ev_handle_server_bc_req(ev_loop* el, ev* e)
 
 void ev_handle_client_bc_req(ev_loop* el, ev* e)
 {
+	printf("ev_handle_server_bc_req\n");
 	sm_client* client;
 	evdata_client_bc_req* ed;	
 
@@ -87,6 +91,7 @@ void ev_handle_client_bc_req(ev_loop* el, ev* e)
 
 void ev_handle_server_check_hb(ev_loop* el, ev* e)
 {
+	printf("ev_handle_server_check_hb\n");
 	ch_update** culist;
 	int nculist = 0;
 	int* uidlist;
@@ -168,10 +173,12 @@ void ev_handle_server_check_hb(ev_loop* el, ev* e)
 void ev_handle_client_power_on(ev_loop* el, ev* e)
 {
 
+	printf("ev_handle_client_power_on\n");
 }
 
 void ev_handle_client_hb_req(ev_loop* el,ev* e)
 {
+	printf("ev_handle_client_hb_req\n");
 	long ltemp;
 	ev* newe;
 	evdata_server_hb_req* ed;
@@ -201,6 +208,7 @@ void ev_handle_client_hb_req(ev_loop* el,ev* e)
 
 void ev_handle_client_switching(ev_loop* el, ev* e)
 {
+	printf("ev_handle_client_switching\n");
 	evdata_client_switching* ed_cs;
 	sm_client* client;
 	ev* newe;
