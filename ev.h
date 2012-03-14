@@ -98,9 +98,7 @@ typedef struct ev_list	{
 
 /*------- event handler table--------------------------*/
 //event code as index
-typedef struct ev_handler_table	{
-	void* handlers[1024];
-}ev_handler_table;
+//typedef void* pvoid;
 
 
 /*------- event ops--------------------------*/
@@ -114,4 +112,7 @@ void ev_list_gets_by_time(ev_list* l, long start, long end, ev** evlist, int* si
 int ev_list_remove(ev_list* l, int i);
 int ev_list_add(ev_list* l, ev* e);
 
+/* -------- */
+evdata_server_hb_req_list* evdata_server_hb_req_list_create();
+void evdata_server_hb_req_list_add(evdata_server_hb_req_list *rl, evdata_server_hb_req* req); 
 #endif

@@ -17,6 +17,6 @@ typedef struct sm_server	{
 
 }sm_server;
 
-
+sm_server* sm_server_create();
 #endif
 

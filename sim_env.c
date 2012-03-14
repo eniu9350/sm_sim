@@ -20,7 +20,11 @@ void sim_env_init(sim_env* se)
 	evdata_client_srv_req* ed_csr;
 
 	/* --- basic init --- */
+	se->el = ev_loop_create();
 	se->nclients = CLIENT_COUNT;
+	//mmm: start end of server not set
+	se->server = sm_server_create();
+	
 
 	/*--- add clients ---*/
 	clients = generate_input_clients_simple_1(se->nclients, CHANNEL_COUNT);
@@ -40,9 +44,7 @@ void sim_env_init(sim_env* se)
 	printf("simenvinit 1.5, i=%d\n", i);
 		client = se->clients[i];
 		ltemp = client->plan->arrival;
-	printf("simenvinit 1.5, i=%d, /2\n", i);
 		for(j=0;j<client->plan->nswitchings;j++)	{
-	printf("simenvinit 1.5, i=%d,j=%d\n", i, j);
 			if(j==0)	{
 				//mmm: not implemented
 				//not switching
@@ -75,9 +77,11 @@ void sim_env_init(sim_env* se)
 		}
 	}
 
+	printf("simenvinit 3\n");
 	/*-- add server broadcast event--*/
 	ltemp = 30;	//mmm: bc interval, should be loaded
 	for(i=se->server->start+ltemp;i<se->server->end;i+=ltemp)	{	//mmm: < should be <=?
+	printf("simenvinit 3.1 i=%d\n", i);
 		e = ev_create(ET_SERVER_BC_REQ, i);
 		ed_sbr = (evdata_server_bc_req*)malloc(sizeof(evdata_server_bc_req));
 		e->data = (void*)ed_sbr;
@@ -85,5 +89,6 @@ void sim_env_init(sim_env* se)
 
 		ev_list_add(se->el->evlist, e);
 	}
+	printf("simenvinit end\n");
 
 }

@@ -2,3 +2,9 @@ client eventloop
 
 
 data generator
+
+
+why two-dimen array can't be init using malloc?
+
+
+server start end not set

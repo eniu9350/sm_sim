@@ -28,6 +28,7 @@ typedef struct ch_client	{
 typedef struct ch_info	{
 	ch** chlist;	//mmm: changed from * to **, ok?
 	int size;
+	int capacity;
 }ch_info;
 
 typedef struct ch_info_client	{
@@ -56,6 +57,9 @@ ch* ch_info_get_by_uid(ch_info* ci, int uid);
 ch* ch_info_get_by_sgid_and_chid(ch_info* ci, int sgid, int chid);
 
 
+/*------- chinfo ops --------------------------*/
+ch_info* ch_info_create();
+void ch_info_add(ch_info* ci, ch* c);
 
 /*------- channel_update ops --------------------------*/
 ch_update* ch_update_create();

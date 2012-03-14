@@ -3,6 +3,11 @@
 
 #include "ev.h"
 
+
+typedef struct ev_handler_table	{
+	void* handlers[1024];
+}ev_handler_table;
+
 /*------- event loop --------------------------*/
 typedef struct ev_loop	{
 	long now;

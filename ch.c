@@ -137,6 +137,44 @@ ch* ch_info_get_by_sgid_and_chid(ch_info* ci, int sgid, int chid)
 	return NULL;
 }
 
+/*------- chinfo ops --------------------------*/
+ch_info* ch_info_create()
+{
+	ch_info* ci;
+	ci = (ch_info*)malloc(sizeof(ch_info));
+	ci->capacity = 200;
+	ci->size = 0;
+	ci->chlist = (ch**)malloc(ci->capacity*sizeof(ch*));
+	return ci;
+}
+
+void ch_info_add(ch_info* ci, ch* c)
+{
+	ch** newchlist;
+	int newcapacity;
+
+	if(ci->size==ci->capacity)	{
+		newcapacity = ci->capacity*2;
+		if(newcapacity==2000)	{
+			perror("max capacity exceeded in ch_info_add!\n");
+			return;
+		}
+		else	{
+			newchlist = (ch**)realloc(ci->chlist, newcapacity*sizeof(ch*));
+			if(!newchlist)	{
+				perror("expand error in ch_info_add\n");
+			}
+			else	{
+				ci->chlist = newchlist;
+				ci->capacity = newcapacity;
+			}
+		}
+	}
+
+	ci->chlist[ci->size] = c;
+	ci->size = ci->size+1;
+}
+
 /*------- channel_update ops --------------------------*/
 ch_update* ch_update_create()
 {

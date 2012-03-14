@@ -162,3 +162,41 @@ int ev_list_add(ev_list* l, ev* enew)
 	return 0;
 }
 
+/* -------- */
+evdata_server_hb_req_list* evdata_server_hb_req_list_create()
+{
+	evdata_server_hb_req_list* rl;
+	rl = (evdata_server_hb_req_list*)malloc(sizeof(evdata_server_hb_req_list));
+	rl->capacity = 200;
+	rl->size = 0;
+	rl->list = (evdata_server_hb_req**)malloc(rl->capacity*sizeof(evdata_server_hb_req*));
+	return rl;
+}
+
+void evdata_server_hb_req_list_add(evdata_server_hb_req_list* rl, evdata_server_hb_req* req)
+{
+	evdata_server_hb_req** newreqlist;
+	int newcapacity;
+
+	if(rl->size==rl->capacity)	{
+		newcapacity = rl->capacity*2;
+		if(newcapacity==2000)	{
+			perror("max capacity exceeded in hbreqlist_add!\n");
+			return;
+		}
+		else	{
+			newreqlist = (evdata_server_hb_req**)realloc(rl->list, newcapacity*sizeof(evdata_server_hb_req*));
+			if(!newreqlist)	{
+				perror("expand error in hbreqlist_add\n");
+			}
+			else	{
+				rl->list = newreqlist;
+				rl->capacity = newcapacity;
+			}
+		}
+	}
+
+	rl->list[rl->size] = req;
+	rl->size = rl->size+1;
+
+}
