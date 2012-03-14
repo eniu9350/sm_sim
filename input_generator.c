@@ -148,21 +148,92 @@ void generate_duration(int total, int* t_durations)
 		 */
 }
 
+void genenerate_switching_chid(int nclients, int nswitchings, int nchannel, int** chids)
+{
+	int i,j;
+	int r;	//temp for random number
 
-sm_client* generate_input_clients_simple_1(int n)
+	//flag: 1.switch up; 2.switch down; 3. switch non-linearly;
+	int** flag;
+	int* flag_flat;
+
+	int ntotal;
+	int nlinear;
+	int nup;
+	int ndown;
+	int nnonlinear;
+
+	ntotal = nclients*(nswitchings-1);
+	nlinear = ntotal*0.62;
+	nup = ntotal*0.43;
+	ndown = nlinear - nup;
+	nnonlinear = ntotal - nlinear;
+
+	//set flag
+	flag = (int**)malloc(ntotal*sizeof(int));
+	flag_flat = (int*)malloc(ntotal*sizeof(int));
+
+	for(i=0;i<nup;i++)	{	//set up flag
+		flag_flat[i] = 1;	
+	}
+	for(;i<nup+ndown;i++)	{	//set down flag
+		flag_flat[i] = 2;
+	}
+	for(;i<nup+ndown+nnonlinear;i++)	{	//set nonlinear flag
+		flag_flat[i] = 3;
+	}
+
+	shuffle_int(flag_flat, ntotal);
+
+	for(i=0;i<nclients;i++)	{
+		for(j=0;j<nswitchings-1;j++)	{
+			flag[i][j] = flag_flat[i*(nswitchings-1)+j];
+		}
+	}
+		
+	//set init channel id
+	srand(nclients*nswitchings);
+	for(i=0;i<nclients;i++)	{
+		chids[i][0] = rand()%nchannel+1;
+	}
+	
+
+	for(i=0;i<nclients;i++)	{
+		for(j=0;j<nswitchings-1;j++)	{
+			if(flag[i][j] == 1)	{
+			chids[i][j+1] = chids[i][j]+1;
+			} else if(flag[i][j] == 2)	{
+			chids[i][j+1] = chids[i][j]-1;
+			}	else	{	//non-linear
+				srand(chids[i][j]);
+				while(1)	{
+					r = rand()%nchannel+1;
+					if(r!=chids[i][j])	{
+						break;
+					}
+				}
+				chids[i][j+1] = r;
+			}
+		}
+	}
+}
+
+
+sm_client* generate_input_clients_simple_1(int n, int nchannels)
 {
 	sm_client* clients;
 	int i,j;
-	int nswitching;
+	int nswitchings;	//mmm: should be renamed to nchids!!!
 	long arrival;	//same arrival time for each client
 	int* durations;
+	int** chids;
 
-	nswitching = 50;
+	nswitchings = 50;
 	arrival = 1;
 
 	//generate durations
-	durations = (int*)malloc(n*nswitching*sizeof(int));
-	generate_duration(n*nswitching, durations);	
+	durations = (int*)malloc(n*nswitchings*sizeof(int));
+	generate_duration(n*nswitchings, durations);	
 
 	clients = (sm_client*)malloc(n*sizeof(sm_client));
 
@@ -171,11 +242,16 @@ sm_client* generate_input_clients_simple_1(int n)
 		clients[i].state = CLIENT_STATE_WORKING;
 		clients[i].plan = (sm_client_plan*)malloc(sizeof(sm_client_plan));
 		clients[i].plan->arrival = arrival;
-		clients[i].plan->nswitchings = nswitching;
-		clients[i].plan->switchings = (sm_client_plan_switching_entry**)malloc(nswitching*sizeof(sm_client_plan_switching_entry*));
-		for(j=0;j<nswitching;j++)	{
+		clients[i].plan->nswitchings = nswitchings;
+		clients[i].plan->switchings = (sm_client_plan_switching_entry**)malloc(nswitchings*sizeof(sm_client_plan_switching_entry*));
+		for(j=0;j<nswitchings;j++)	{
 			clients[i].plan->switchings[j] = (sm_client_plan_switching_entry*)malloc(sizeof(sm_client_plan_switching_entry));
-			clients[i].plan->switchings[j]->duration = durations[i*nswitching+j];
+			clients[i].plan->switchings[j]->duration = durations[i*nswitchings+j];
 		}
 	}
+
+	//generate chids
+	chids = (int**)malloc(n*nswitchings*sizeof(int));
+	genenerate_switching_chid(n, nswitchings, nchannels, chids);
+
 }
