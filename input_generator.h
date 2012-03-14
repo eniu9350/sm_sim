@@ -11,7 +11,6 @@ typedef struct duration	{
 }duration;
 
 
-typedef struct 
 
 //n: client counts
 sm_client* generate_input_clients_simple_1(int n);
