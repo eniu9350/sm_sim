@@ -4,6 +4,14 @@
 #include "sm_server.h"
 #include "sm_client.h"
 
+
+/* ----------- global settings ----------- */
+#define CLIENT_COUNT 50
+#define CHANNEL_COUNT 200
+
+
+
+
 typedef struct sim_env	{
 	ev_loop* el;
 

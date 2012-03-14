@@ -13,6 +13,7 @@ typedef struct ev_loop	{
 
 
 /*------- event loop ops--------------------------*/
+ev_loop* ev_loop_create();
 void ev_loop_loop(ev_loop* el);
 //wrapper of ev_list_add, incorporating logging support
 int ev_loop_fire_event(ev_loop* el, ev* e);

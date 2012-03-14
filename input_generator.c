@@ -110,7 +110,6 @@ void generate_duration(int total, int* t_durations)
 	}
 
 
-	printf("before shuffle\n");
 	//flat representation of durations
 	k = 0;
 	for(i=0;i<53;i++)	{
@@ -119,7 +118,6 @@ void generate_duration(int total, int* t_durations)
 		}
 	}
 
-	printf("before shuffle2\n");
 	if(total!=k)	{
 		printf("error before shuffling in duration generation process.\n");
 	}
@@ -148,14 +146,14 @@ void generate_duration(int total, int* t_durations)
 		 */
 }
 
-void genenerate_switching_chid(int nclients, int nswitchings, int nchannel, int** chids)
+void genenerate_switching_chid(int nclients, int nswitchings, int nchannel, int* chids)
 {
 	int i,j;
 	int r;	//temp for random number
 
 	//flag: 1.switch up; 2.switch down; 3. switch non-linearly;
-	int** flag;
-	int* flag_flat;
+	int* flag;
+	//int* flag_flat;
 
 	int ntotal;
 	int nlinear;
@@ -170,49 +168,60 @@ void genenerate_switching_chid(int nclients, int nswitchings, int nchannel, int*
 	nnonlinear = ntotal - nlinear;
 
 	//set flag
-	flag = (int**)malloc(ntotal*sizeof(int));
-	flag_flat = (int*)malloc(ntotal*sizeof(int));
+	flag = (int*)malloc(ntotal*sizeof(int));
+
+	//flag_flat = (int*)malloc(ntotal*sizeof(int));
 
 	for(i=0;i<nup;i++)	{	//set up flag
-		flag_flat[i] = 1;	
+		flag[i] = 1;	
 	}
 	for(;i<nup+ndown;i++)	{	//set down flag
-		flag_flat[i] = 2;
+		flag[i] = 2;
 	}
 	for(;i<nup+ndown+nnonlinear;i++)	{	//set nonlinear flag
-		flag_flat[i] = 3;
+		flag[i] = 3;
 	}
 
-	shuffle_int(flag_flat, ntotal);
 
+	shuffle_int(flag, ntotal);
+
+	/*
+	for(i=0;i<ntotal;i++)	{
+		printf("flag_flat[%d] = %d ", i, flag_flat[i]);
+	}
+	*/
+
+	/*
 	for(i=0;i<nclients;i++)	{
 		for(j=0;j<nswitchings-1;j++)	{
-			flag[i][j] = flag_flat[i*(nswitchings-1)+j];
+			printf("i=%d,j=%d,i*(nswitchings-1)+j=%d\n", i, j, i*(nswitchings-1)+j);
+			//flag[i][j] = flag_flat[i*(nswitchings-1)+j];
 		}
 	}
+	*/
 		
 	//set init channel id
 	srand(nclients*nswitchings);
 	for(i=0;i<nclients;i++)	{
-		chids[i][0] = rand()%nchannel+1;
+		chids[i*(nswitchings)+0] = rand()%nchannel+1;
 	}
 	
 
 	for(i=0;i<nclients;i++)	{
 		for(j=0;j<nswitchings-1;j++)	{
-			if(flag[i][j] == 1)	{
-			chids[i][j+1] = chids[i][j]+1;
-			} else if(flag[i][j] == 2)	{
-			chids[i][j+1] = chids[i][j]-1;
+			if(flag[i*(nswitchings-1)+j] == 1)	{
+			chids[i*(nswitchings)+j+1] = chids[i*nswitchings+j]+1;
+			} else if(flag[i*(nswitchings-1)+j] == 2)	{
+			chids[i*nswitchings+j+1] = chids[i*nswitchings+j]-1;
 			}	else	{	//non-linear
-				srand(chids[i][j]);
+				srand(chids[i*nswitchings+j]);
 				while(1)	{
 					r = rand()%nchannel+1;
-					if(r!=chids[i][j])	{
+					if(r!=chids[i*nswitchings+j])	{
 						break;
 					}
 				}
-				chids[i][j+1] = r;
+				chids[i*nswitchings+j+1] = r;
 			}
 		}
 	}
@@ -226,7 +235,7 @@ sm_client* generate_input_clients_simple_1(int n, int nchannels)
 	int nswitchings;	//mmm: should be renamed to nchids!!!
 	long arrival;	//same arrival time for each client
 	int* durations;
-	int** chids;
+	int* chids;
 
 	nswitchings = 50;
 	arrival = 1;
@@ -251,7 +260,15 @@ sm_client* generate_input_clients_simple_1(int n, int nchannels)
 	}
 
 	//generate chids
-	chids = (int**)malloc(n*nswitchings*sizeof(int));
+	chids = (int*)malloc(n*nswitchings*sizeof(int));
 	genenerate_switching_chid(n, nswitchings, nchannels, chids);
+	for(i=0;i<n;i++)	{
+		for(j=0;j<nswitchings;j++)	{
+			clients[i].plan->switchings[j]->chid = chids[i*nswitchings+j];
+		}
+	}
+	printf("3\n");
+
+	return clients;
 
 }
