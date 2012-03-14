@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include "input_generator.h"
 #include <stdio.h>
+#include "ev_handler.h"
 
 void sim_env_init(sim_env* se)
 {
@@ -19,8 +20,21 @@ void sim_env_init(sim_env* se)
 	evdata_server_bc_req* ed_sbr;
 	evdata_client_srv_req* ed_csr;
 
+
 	/* --- basic init --- */
 	se->el = ev_loop_create();
+	se->el->evht->handlers[ET_SERVER_HB_REQ] = ev_handle_server_hb_req;
+	se->el->evht->handlers[ET_SERVER_HB_RSP] = ev_handle_server_hb_resp;
+	se->el->evht->handlers[ET_SERVER_BC_REQ] = ev_handle_server_bc_req;
+	se->el->evht->handlers[ET_SERVER_CHECK_HB] = ev_handle_server_check_hb;
+
+
+	se->el->evht->handlers[ET_CLIENT_POWER_ON] = ev_handle_client_power_on;
+	se->el->evht->handlers[ET_CLIENT_HB_REQ] = ev_handle_client_hb_req;
+	se->el->evht->handlers[ET_CLIENT_BC_REQ] = ev_handle_client_bc_req;
+	se->el->evht->handlers[ET_CLIENT_SWITCHING] = ev_handle_client_switching;
+
+
 	se->nclients = CLIENT_COUNT;
 	//mmm: start end of server not set
 	se->server = sm_server_create();
@@ -44,6 +58,7 @@ void sim_env_init(sim_env* se)
 	printf("simenvinit 1.5, i=%d\n", i);
 		client = se->clients[i];
 		ltemp = client->plan->arrival;
+		printf("ltemp=%ld\n", ltemp);
 		for(j=0;j<client->plan->nswitchings;j++)	{
 			if(j==0)	{
 				//mmm: not implemented

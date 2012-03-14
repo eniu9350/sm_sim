@@ -8,6 +8,7 @@ ev* ev_create(int type, long time)
 {
 	ev* e = (ev*)malloc(sizeof(ev));
 	e->type = type;
+	e->time = time;
 	e->next = NULL;
 	return e;
 }

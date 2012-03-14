@@ -31,7 +31,7 @@ void ev_loop_loop(ev_loop* el)
 
 	int evlistsize = -1;	//mmm: can its addr be used(e.g. &evlistsize) when not initialized
 	while(1)	{
-		printf("evloop 1, evlistsize=%d\n", el->evlist->size);
+		printf("evloop 1\n");
 		//mmm: if all client ends and server no events, end
 		e = ev_list_get(el->evlist, 0);
 		e2 = e;
@@ -39,7 +39,7 @@ void ev_loop_loop(ev_loop* el)
 		printf("evloop 1.5\n");
 		ielisttmp = 0;
 		while(e2->time == e->time)	{
-			printf("while %d\n", ielisttmp);
+			printf("while %d, evtype=%d\n", ielisttmp, e2->type);
 			elisttmp[ielisttmp++] = e2;
 			e2 = e2->next;
 		}
@@ -51,13 +51,16 @@ void ev_loop_loop(ev_loop* el)
 				break;
 			}
 		}
-		ev_loop_fire_event(el, elisttmp[i]);
+		if(i!=ielisttmp)	{
+			ev_loop_fire_event(el, elisttmp[i]);
+		}
 
 			
 		printf("evloop 3\n");
 		
 		//ev_list_gets_by_time(el->evlist, el->now, el->now+demul_interval, evlist, &evlistsize);
 		handler = (void (*)(ev_loop*, ev*))(el->evht->handlers[e->type]);
+		printf("handler=%d\n", handler);
 		(*handler)(el, e);
 
 	}
