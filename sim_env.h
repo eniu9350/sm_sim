@@ -25,4 +25,7 @@ typedef struct sim_env	{
 
 void sim_env_init(sim_env* se);
 
+/* ------ client -----------*/
+sm_client* sim_env_get_client_by_uid(int uid);
+
 #endif

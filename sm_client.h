@@ -30,6 +30,7 @@ typedef struct sm_client_plan	{
 
 typedef struct sm_client	{
 	int id;
+	int sgid;
 
 	//planed switching event
 	sm_client_plan* plan;

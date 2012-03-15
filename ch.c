@@ -4,26 +4,36 @@
 #include <stdlib.h>
 
 /*------- channel ops --------------------------*/
-int ch_join(ch* ch, int uid)
+ch* ch_create(int sgid, int chid)
+{
+	ch* c;
+	c = (ch*)malloc(sizeof(ch));
+	c->sgid = sgid;
+	c->chid = chid;
+	c->users = create_user_alist();
+	return c;
+}
+
+int ch_join(ch* ch, int* u)
 {
 	int i;
 	//mmm: check if uid exist yet
-	userlist_add(ch->users, uid);
+	add_user(ch->users, u);
 	return 0;
 }
 
-int ch_leave(ch* ch, int uid)
+int ch_leave(ch* ch, int* u)
 {
 	int i;
 	//mmm: check if uid exist
-	userlist_remove_by_id(ch->users, uid);
+	user_alist_remove_by_id(ch->users, *u);
 	return 0;
 }
 
 /* ch alist */
 alisttpl_struct_impl(ch)
 
-void ch_alist_get_update_list(ch_info* ci, int* uidlist, int* chlist, int n, ch_update** culist, int* nculist)
+void ch_alist_get_update_list(ch_alist* ci, int* uidlist, int* chlist, int n, ch_update** culist, int* nculist)
 {
 	char* flag;	
 	int* pre;//previous channel
@@ -33,6 +43,7 @@ void ch_alist_get_update_list(ch_info* ci, int* uidlist, int* chlist, int n, ch_
 	//channel_update** culist;
 	//int nculist;
 	ch_update* cu;
+	int *u;
 	//0:not processed, 1:removal processed, 2:add processed, 3: all
 	flag = (char*)malloc(n*sizeof(char));
 	pre = (int*)malloc(n*sizeof(int));
@@ -69,7 +80,9 @@ void ch_alist_get_update_list(ch_info* ci, int* uidlist, int* chlist, int n, ch_
 			if(flag[i]==0 || flag[i]==2)	{
 				//choose one not processed leave
 				flag[i] += 1;	//mmm: should be &1
-				ch_update_add_leave(cu, uidlist[i]);
+				u = (int*)malloc(sizeof(int));
+				*u = uidlist[i];
+				ch_update_add_leave(cu, u);
 				cu->chid = pre[i];
 				break;
 			}
@@ -78,7 +91,9 @@ void ch_alist_get_update_list(ch_info* ci, int* uidlist, int* chlist, int n, ch_
 		if(i!=n)	{
 			for(i=0;i<n;i++)	{//add other unprocessed leave same as cu->chid
 				if((flag[i]==0 || flag[i]==2) && pre[i] == cu->chid)	{
-					ch_update_add_leave(cu, uidlist[i]);
+					u = (int*)malloc(sizeof(int));
+					*u = uidlist[i];
+					ch_update_add_leave(cu, u);
 					flag[i] += 1;
 				}
 			}
@@ -88,14 +103,18 @@ void ch_alist_get_update_list(ch_info* ci, int* uidlist, int* chlist, int n, ch_
 				if(flag[i]==0 || flag[i] == 2)	{
 					flag[i] += 2;
 					cu->chid = chlist[i];
-					ch_update_add_join(cu, uidlist[i]);
+					u = (int*)malloc(sizeof(int));
+					*u = uidlist[i];
+					ch_update_add_join(cu, u);
 				}
 			}
 
 			for(i=0;i<n;i++)	{//choose (other/all) unprocessed join
 				if((flag[i]==0 || flag[i]==1) && chlist[i] == cu->chid)	{
 					flag[i] += 2;
-					ch_update_add_join(cu, uidlist[i]);
+					u = (int*)malloc(sizeof(int));
+					*u = uidlist[i];
+					ch_update_add_join(cu, u);
 				}
 			}
 		}
@@ -107,7 +126,7 @@ void ch_alist_get_update_list(ch_info* ci, int* uidlist, int* chlist, int n, ch_
 }
 
 
-ch* ch_alist_get_by_uid(ch_info* ci, int uid)
+ch* ch_alist_get_by_uid(ch_alist* ci, int uid)
 {
 	int i,j;
 	for(i=0;i<ci->size;i++)	{
@@ -116,7 +135,7 @@ ch* ch_alist_get_by_uid(ch_info* ci, int uid)
 			return NULL;
 		}
 		for(j=0;j<ci->list[i]->users->size;j++)	{
-			if(ci->list[i]->users->list[j] == uid)	{
+			if(*(ci->list[i]->users->list[j]) == uid)	{
 				return ci->list[i];
 			}
 		}
@@ -126,7 +145,7 @@ ch* ch_alist_get_by_uid(ch_info* ci, int uid)
 	return NULL;
 }
 
-ch* ch_alist_get_by_sgid_and_chid(ch_info* ci, int sgid, int chid)
+ch* ch_alist_get_by_sgid_and_chid(ch_alist* ci, int sgid, int chid)
 {
 	int i;
 	for(i=0;i<ci->size;i++)	{
@@ -139,43 +158,43 @@ ch* ch_alist_get_by_sgid_and_chid(ch_info* ci, int sgid, int chid)
 
 /*------- chinfo ops --------------------------*/
 /*
-ch_info* ch_info_create()
-{
-	ch_info* ci;
-	ci = (ch_info*)malloc(sizeof(ch_info));
-	ci->capacity = 200;
-	ci->size = 0;
-	ci->list = (ch**)malloc(ci->capacity*sizeof(ch*));
-	return ci;
-}
+	 ch_info* ch_info_create()
+	 {
+	 ch_info* ci;
+	 ci = (ch_info*)malloc(sizeof(ch_info));
+	 ci->capacity = 200;
+	 ci->size = 0;
+	 ci->list = (ch**)malloc(ci->capacity*sizeof(ch*));
+	 return ci;
+	 }
 
-void ch_info_add(ch_info* ci, ch* c)
-{
-	ch** newchlist;
-	int newcapacity;
+	 void ch_info_add(ch_info* ci, ch* c)
+	 {
+	 ch** newchlist;
+	 int newcapacity;
 
-	if(ci->size==ci->capacity)	{
-		newcapacity = ci->capacity*2;
-		if(newcapacity==2000)	{
-			perror("max capacity exceeded in ch_info_add!\n");
-			return;
-		}
-		else	{
-			newchlist = (ch**)realloc(ci->chlist, newcapacity*sizeof(ch*));
-			if(!newchlist)	{
-				perror("expand error in ch_info_add\n");
-			}
-			else	{
-				ci->chlist = newchlist;
-				ci->capacity = newcapacity;
-			}
-		}
-	}
+	 if(ci->size==ci->capacity)	{
+	 newcapacity = ci->capacity*2;
+	 if(newcapacity==2000)	{
+	 perror("max capacity exceeded in ch_info_add!\n");
+	 return;
+	 }
+	 else	{
+	 newchlist = (ch**)realloc(ci->chlist, newcapacity*sizeof(ch*));
+	 if(!newchlist)	{
+	 perror("expand error in ch_info_add\n");
+	 }
+	 else	{
+	 ci->chlist = newchlist;
+	 ci->capacity = newcapacity;
+	 }
+	 }
+	 }
 
-	ci->chlist[ci->size] = c;
-	ci->size = ci->size+1;
-}
-*/
+	 ci->chlist[ci->size] = c;
+	 ci->size = ci->size+1;
+	 }
+	 */
 
 
 ch_info_client* ch_info_client_create()
@@ -192,17 +211,17 @@ ch_update* ch_update_create()
 {
 	ch_update* cu;
 	cu = (ch_update*)malloc(sizeof(ch_update));
-	cu->leave = userlist_create();
-	cu->join = userlist_create();
+	cu->leave = create_user_alist();
+	cu->join = create_user_alist();
 	cu->processed = 0;
 }
 
-void ch_update_add_join(ch_update* cu, int uid)
+void ch_update_add_join(ch_update* cu, int* u)
 {
-	userlist_add(cu->join, uid);
+	add_user(cu->join, u);
 }
 
-void ch_update_add_leave(ch_update* cu, int uid)
+void ch_update_add_leave(ch_update* cu, int* u)
 {
-	userlist_add(cu->leave, uid);
+	add_user(cu->leave, u);
 }

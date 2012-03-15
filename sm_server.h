@@ -11,7 +11,7 @@ typedef struct sm_server	{
 	long start;
 	long end;
 	
-	ch_info* ci;
+	ch_alist* ci;	//channel info
 
 	evdata_server_hb_req_alist* buf_hb_req;
 

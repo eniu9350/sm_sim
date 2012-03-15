@@ -15,7 +15,7 @@ typedef struct ch	{
 
 	//value = freq+usrlist
 	freq* f;
-	userlist* users;
+	user_alist* users;
 }ch;
 
 typedef struct ch_client	{
@@ -34,7 +34,7 @@ typedef struct ch_info	{
 }ch_info;
 */
 alisttpl_struct(ch)
-typedef ch_alist ch_info;
+//typedef ch_alist ch_info;
 
 
 typedef struct ch_info_client	{
@@ -48,16 +48,17 @@ typedef struct ch_update	{
 	int sgid;	//not used
 	int chid;
 
-	userlist* leave;
-	userlist* join;
+	user_alist* leave;
+	user_alist* join;
 
 	int processed;	//0: not, 1: processed
 }ch_update;
 
 
 /*------- ch ops --------------------------*/
-int ch_join(ch* c, int uid);
-int ch_leave(ch* c, int uid);
+ch* ch_create(int sgid, int chid);
+int ch_join(ch* c, int* u);
+int ch_leave(ch* c, int* u);
 
 
 /*------- chinfo ops --------------------------*/
@@ -72,6 +73,6 @@ ch_info_client* ch_info_client_create();
 
 /*------- channel_update ops --------------------------*/
 ch_update* ch_update_create();
-void ch_update_add_join(ch_update* cu, int uid);
-void ch_update_add_leave(ch_update* cu, int uid);
+void ch_update_add_join(ch_update* cu, int* u);
+void ch_update_add_leave(ch_update* cu, int* u);
 #endif

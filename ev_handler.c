@@ -6,6 +6,7 @@
 #include "sim_env.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "ch.h"
 
 extern sim_env se;	//mmm: trival --- right?
 
@@ -77,26 +78,27 @@ void ev_handle_server_bc_req(ev_loop* el, ev* e)
 			ev_list_add(el->evlist, newe);
 		}
 	}
-
 }
 
 
 
 void ev_handle_server_check_hb(ev_loop* el, ev* e)
 {
-	printf("ev_handle_server_check_hb\n");
 	ch_update** culist;
 	int nculist = 0;
 	int* uidlist;
 	int* chlist;
 	int n;
-	ch* ch;
+	ch* c;
 	int i,j;
 	sm_server* server;
 	ev* newe;
 	evdata_server_ra_req* ed_ra;
 	evdata_server_rr_req* ed_rr;
 	long ltemp;
+	ch* c2;
+
+	printf("ev_handle_server_check_hb\n");
 
 	culist = (ch_update**)malloc(1000*sizeof(ch_update*));	//mmm: large enough?
 
@@ -128,13 +130,23 @@ void ev_handle_server_check_hb(ev_loop* el, ev* e)
 				ed_ra->chid = culist[i]->chid;
 				newe->data = ed_ra;
 				ev_list_add(el->evlist, newe);
+
+				//mmm: assume res allocated immediately
+				//add new ch (including users)
+				c2 = (ch*)malloc(sizeof(ch));
+				c2->sgid = culist[i]->sgid;
+				c2->chid = culist[i]->chid;
+				//ch->users = 
+
+
+
 			}
 		}
 
 		if(culist[i]->join->size == 0)	{
-			ch = ch_alist_get_by_sgid_and_chid(server->ci, culist[i]->sgid, culist[i]->chid);
+			c = ch_alist_get_by_sgid_and_chid(server->ci, culist[i]->sgid, culist[i]->chid);
 			//mmm: heuristics here, right?(forcing a check will gurantee ok)
-			if(ch->users->size == culist[i]->leave->size)	{//rel res
+			if(c->users->size == culist[i]->leave->size)	{//rel res
 				culist[i]->processed = 1;
 				//mmm: should log
 				newe = (ev*)malloc(sizeof(ev));
@@ -151,12 +163,12 @@ void ev_handle_server_check_hb(ev_loop* el, ev* e)
 
 	for(i=0;i<nculist;i++)	{
 		if(culist[i]->processed==0)	{	//just modify data
-			ch = ch_alist_get_by_sgid_and_chid(server->ci, culist[i]->sgid, culist[i]->chid);
+			c = ch_alist_get_by_sgid_and_chid(server->ci, culist[i]->sgid, culist[i]->chid);
 			for(j=0;j<culist[i]->join->size;j++)	{
-				ch_join(ch, culist[i]->join->list[j]);
+				ch_join(c, culist[i]->join->list[j]);
 			}
 			for(j=0;j<culist[i]->leave->size;j++)	{
-				ch_leave(ch, culist[i]->leave->list[j]);
+				ch_leave(c, culist[i]->leave->list[j]);
 			}
 		}
 	}
@@ -164,6 +176,31 @@ void ev_handle_server_check_hb(ev_loop* el, ev* e)
 
 void ev_handle_server_srv_req(ev_loop* el, ev* e)
 {
+
+	ch* c;
+	evdata_server_srv_req* ed = (evdata_server_srv_req*)e->data;
+	sm_client* client;
+	int* u;
+
+	client = sim_env_get_client_by_uid(ed->uid);
+
+	printf("ev_handle_server_srv_req\n");
+
+	c = ch_alist_get_by_sgid_and_chid(se.server->ci, client->sgid, ed->chid);
+	if(c==NULL)	{
+		//mmmm: alloc res first
+		c = ch_create(client->sgid, ed->chid);
+		//mmm: no freq info yet
+		add_ch(se.server->ci, c);
+	}
+	else	{
+		printf("chinfo: sgid=%d, chid=%d, cisize=%d, reqchid=%d\n", c->sgid, c->chid, se.server->ci->size, ed->chid);
+		u = (int*)malloc(sizeof(int));
+		*u = ed->uid;
+		add_user(c->users, u);
+	}
+
+	//mmmm: should generate response
 }
 /*------- client event handler--------------------------*/
 void ev_handle_client_power_on(ev_loop* el, ev* e)
@@ -223,7 +260,7 @@ void ev_handle_client_switching(ev_loop* el, ev* e)
 	evdata_client_switching* ed_cs;
 	sm_client* client;
 	ev* newe;
-	evdata_client_srv_req* ed_csr;
+	evdata_server_srv_req* ed_csr;
 	int chid;
 	int i;
 	long ltemp;
@@ -238,10 +275,10 @@ void ev_handle_client_switching(ev_loop* el, ev* e)
 	}
 
 	if(i==client->ci->size) {	//chid not in local channel list, need to send request
-		//mmm: constant---- switching->channelchange
+		//mmm: constant---- switching->channelchange@server
 		ltemp = 1;
 		newe = ev_create(ET_SERVER_SRV_REQ, el->now+ltemp); 
-		ed_csr = (evdata_client_srv_req*)malloc(sizeof(evdata_client_srv_req));
+		ed_csr = (evdata_server_srv_req*)malloc(sizeof(evdata_client_srv_req));
 		ed_csr->uid = client->id;
 		ed_csr->chid = chid;
 		newe->data = (void*)ed_csr;

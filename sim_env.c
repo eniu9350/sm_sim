@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include "ev_handler.h"
 
+extern sim_env se;
+
 void sim_env_init(sim_env* se)
 {
 	int i, j;
@@ -105,6 +107,23 @@ void sim_env_init(sim_env* se)
 
 		ev_list_add(se->el->evlist, e);
 	}
-	printf("simenvinit end\n");
+	printf("simenvinit end, server.cisize=%d\n", se->server->ci->size);
 
 }
+
+
+/* ------ client -----------*/
+sm_client* sim_env_get_client_by_uid(int uid)
+{
+	sm_client* c;
+	int i;
+	for(i=0;i<se.nclients;i++)	{
+		c = se.clients[i];
+		if(c->id == uid)	{
+			return c;
+		}
+	}
+
+	return NULL;
+}
+

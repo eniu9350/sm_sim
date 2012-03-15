@@ -10,8 +10,10 @@ ev_loop* ev_loop_create()
 	ev_handler_table* evht = (ev_handler_table*)malloc(sizeof(ev_handler_table));
 	//evht->handlers = (void*)malloc(1024*sizeof(void*));
 	el = (ev_loop*)malloc(sizeof(ev_loop));
+	el->now = 1;
 	el->evlist = ev_list_create();
 	el->evht = evht;
+	return el;
 }
 
 void ev_loop_loop(ev_loop* el)
@@ -26,23 +28,29 @@ void ev_loop_loop(ev_loop* el)
 	int i;
 
 	evlist = (ev**)malloc(20000*sizeof(ev*));
-
 	elisttmp = (ev**)malloc(20000*sizeof(ev*));
-	
 
 	int evlistsize = -1;	//mmm: can its addr be used(e.g. &evlistsize) when not initialized
 	while(1)	{
 		printf("evloop 1\n");
 		//mmm: if all client ends and server no events, end
-		e = ev_list_get(el->evlist, 0);
+		e = ev_list_pop_head(el->evlist);
+
+		if(e->time>el->now)	{	//if e->time later
+			continue;
+		}
+
+
 		e2 = e;
 		
 		printf("evloop 1.5\n");
 		ielisttmp = 0;
 		while(e2->time == e->time)	{
+			ev_list_pop_head(el->evlist);
 			printf("while %d, evtype=%d\n", ielisttmp, e2->type);
 			elisttmp[ielisttmp++] = e2;
-			e2 = e2->next;
+			//e2 = e2->next;
+			e2 = ev_list_get(el->evlist, 0);
 		}
 
 		printf("evloop 2\n");

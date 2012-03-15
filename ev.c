@@ -49,6 +49,17 @@ ev* ev_list_get(ev_list* l, int i)
 	return e;
 }
 
+ev* ev_list_pop_head(ev_list* l)
+{
+	ev* e;
+	int result;
+	e = ev_list_get(l, 0);
+	if(e)	{
+		ev_list_remove_without_destroy(l, 0, &result);	//mmm: no error handling
+	}
+	return e;
+}
+
 void ev_list_gets_by_time(ev_list* l, long start, long end, ev** evlist, int* size)
 {
 	ev* e;
@@ -81,7 +92,7 @@ void ev_list_gets_by_time(ev_list* l, long start, long end, ev** evlist, int* si
 	eend = e;
 }
 
-int ev_list_remove(ev_list* l, int i)
+static ev* ev_list_remove_without_destroy(ev_list* l, int i, int* result)
 {
 	ev* tmp;
 	int size;
@@ -91,10 +102,12 @@ int ev_list_remove(ev_list* l, int i)
 
 	if(!l->head)	{	//head is null
 		if(i==0)	{
-			return 0;
+			*result = 0;
+			return NULL;
 		}
 		else	{
-			return -1;
+			*result = -1;
+			return NULL;
 		}
 	}
 
@@ -105,7 +118,8 @@ int ev_list_remove(ev_list* l, int i)
 		size++;
 	}
 	if(i>=size)	{
-		return -2;
+		*result = -2;
+		return NULL;
 	}
 
 	//init pointer
@@ -120,16 +134,28 @@ int ev_list_remove(ev_list* l, int i)
 	//mmm: right?
 	if(pre==NULL)	{	//remove head
 		l->head = e->next;
+		return e;	//mmm: right?
 	}
 	else	{
 		pre->next = e->next;
+		return e;
 	}
 
-	ev_destroy(e);
-
-	return 0;
+	*result = 0;
 }
 
+
+int ev_list_remove(ev_list* l, int i)
+{
+	int result;
+	ev* e;
+	result = 0;
+	e = ev_list_remove_without_destroy(l, i, &result);//mmm: [Clang] result used directly?
+	if(result == 0)	{
+		ev_destroy(e);
+	}
+	return result;
+}
 
 int ev_list_add(ev_list* l, ev* enew)
 {

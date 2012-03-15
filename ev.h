@@ -68,6 +68,10 @@ typedef struct evdata_server_rr_req	{
 typedef struct evdata_server_check_hb	{
 }evdata_server_check_hb;	
 
+typedef struct evdata_server_srv_req	{
+	int uid;
+	int chid;
+}evdata_server_srv_req;
 /*------- client event types--------------------------*/
 //just a notification for client to send hb req, chid is included in server event
 typedef struct evdata_client_hb_req	{
@@ -80,6 +84,7 @@ typedef struct evdata_client_bc_req	{
 	int size;
 }evdata_client_bc_req;
 
+//mmmm: not used yet
 typedef struct evdata_client_srv_req	{
 	int uid;
 	int chid;
@@ -111,7 +116,9 @@ void ev_destroy(ev* e);
 /*------- event list ops--------------------------*/
 ev_list* ev_list_create();
 ev* ev_list_get(ev_list* l, int i);
+ev* ev_list_pop_head(ev_list* l);	//mmmm: exception handling not considered
 void ev_list_gets_by_time(ev_list* l, long start, long end, ev** evlist, int* size);
+static ev* ev_list_remove_without_destroy(ev_list* l, int i, int* result);
 int ev_list_remove(ev_list* l, int i);
 int ev_list_add(ev_list* l, ev* e);
 

@@ -5,6 +5,8 @@
 
 
 /*------- userlist ops --------------------------*/
+alisttpl_struct_impl(user)
+/*
 userlist* userlist_create()
 {
 	userlist* ul;
@@ -31,13 +33,13 @@ int userlist_add(userlist* ul, int uid)
 
 	return 0;
 }
+*/
 
-
-int userlist_remove_by_id(userlist* ul, int uid)
+int user_alist_remove_by_id(user_alist* ul, int uid)
 {
 	int i;
 	for(i=0;i<ul->size;i++)	{
-		if(ul->list[i] == uid)	{
+		if(*(ul->list[i]) == uid)	{
 			break;
 		}
 	}
@@ -52,7 +54,7 @@ int userlist_remove_by_id(userlist* ul, int uid)
 	}
 	return 0;
 }
-
+/*
 int userlist_expand(userlist* ul)
 {
 	ul->list = (int*)realloc(ul->list, ul->capacity * 2);
@@ -63,3 +65,4 @@ int userlist_expand(userlist* ul)
 	ul->capacity = ul->capacity*2;
 	return 0;
 }
+*/

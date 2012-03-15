@@ -265,8 +265,10 @@ sm_client* generate_input_clients_simple_1(int n, int nchannels)
 	chids = (int*)malloc(n*nswitchings*sizeof(int));
 	genenerate_switching_chid(n, nswitchings, nchannels, chids);
 	for(i=0;i<n;i++)	{
+		printf("\n===user===%d\n", i);
 		for(j=0;j<nswitchings;j++)	{
 			clients[i].plan->switchings[j]->chid = chids[i*nswitchings+j];
+			printf("%d, ", chids[i*nswitchings+j]);
 		}
 	}
 	printf("3\n");
