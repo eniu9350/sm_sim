@@ -60,6 +60,7 @@ ch* ch_info_get_by_sgid_and_chid(ch_info* ci, int sgid, int chid);
 /*------- chinfo ops --------------------------*/
 ch_info* ch_info_create();
 void ch_info_add(ch_info* ci, ch* c);
+ch_info_client* ch_info_client_create();
 
 /*------- channel_update ops --------------------------*/
 ch_update* ch_update_create();

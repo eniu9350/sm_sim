@@ -175,6 +175,16 @@ void ch_info_add(ch_info* ci, ch* c)
 	ci->size = ci->size+1;
 }
 
+
+ch_info_client* ch_info_client_create()
+{
+	ch_info_client* ci;
+	ci = (ch_info_client*)malloc(sizeof(ch_info_client));
+	ci->size = 0;
+	ci->chlist = NULL;	//mmm: right?
+	return ci;
+}
+
 /*------- channel_update ops --------------------------*/
 ch_update* ch_update_create()
 {

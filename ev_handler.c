@@ -5,6 +5,7 @@
 
 #include "sim_env.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 extern sim_env se;	//mmm: trival --- right?
 
@@ -74,20 +75,7 @@ void ev_handle_server_bc_req(ev_loop* el, ev* e)
 
 }
 
-void ev_handle_client_bc_req(ev_loop* el, ev* e)
-{
-	printf("ev_handle_server_bc_req\n");
-	sm_client* client;
-	evdata_client_bc_req* ed;	
 
-	ed = (evdata_client_bc_req*)e->data;
-
-	client = (sm_client*)e->agent;
-
-	//update local ch list
-	client->ci->chlist = ed->chlist;
-	client->ci->size = ed->size;
-}
 
 void ev_handle_server_check_hb(ev_loop* el, ev* e)
 {
@@ -169,6 +157,9 @@ void ev_handle_server_check_hb(ev_loop* el, ev* e)
 	}
 }
 
+void ev_handle_server_srv_req(ev_loop* el, ev* e)
+{
+}
 /*------- client event handler--------------------------*/
 void ev_handle_client_power_on(ev_loop* el, ev* e)
 {
@@ -204,6 +195,21 @@ void ev_handle_client_hb_req(ev_loop* el,ev* e)
 
 		 fire_event(el->evlist, newe);
 		 */
+}
+
+void ev_handle_client_bc_req(ev_loop* el, ev* e)
+{
+	printf("ev_handle_server_bc_req\n");
+	sm_client* client;
+	evdata_client_bc_req* ed;	
+
+	ed = (evdata_client_bc_req*)e->data;
+
+	client = (sm_client*)e->agent;
+
+	//update local ch list
+	client->ci->chlist = ed->chlist;
+	client->ci->size = ed->size;
 }
 
 void ev_handle_client_switching(ev_loop* el, ev* e)

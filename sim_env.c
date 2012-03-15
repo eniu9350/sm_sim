@@ -27,6 +27,7 @@ void sim_env_init(sim_env* se)
 	se->el->evht->handlers[ET_SERVER_HB_RSP] = ev_handle_server_hb_resp;
 	se->el->evht->handlers[ET_SERVER_BC_REQ] = ev_handle_server_bc_req;
 	se->el->evht->handlers[ET_SERVER_CHECK_HB] = ev_handle_server_check_hb;
+	se->el->evht->handlers[ET_SERVER_SRV_REQ] = ev_handle_server_srv_req;
 
 
 	se->el->evht->handlers[ET_CLIENT_POWER_ON] = ev_handle_client_power_on;

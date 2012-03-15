@@ -1,6 +1,7 @@
 #include "ev_loop.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 
 /*------- event loop ops--------------------------*/
 ev_loop* ev_loop_create()
@@ -56,11 +57,11 @@ void ev_loop_loop(ev_loop* el)
 		}
 
 			
-		printf("evloop 3\n");
+		printf("evloop 3, etype=%d\n", e->type);
 		
 		//ev_list_gets_by_time(el->evlist, el->now, el->now+demul_interval, evlist, &evlistsize);
 		handler = (void (*)(ev_loop*, ev*))(el->evht->handlers[e->type]);
-		printf("handler=%d\n", handler);
+		//printf("handler=%d\n", handler);
 		(*handler)(el, e);
 
 	}

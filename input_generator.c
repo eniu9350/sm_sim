@@ -248,6 +248,7 @@ sm_client* generate_input_clients_simple_1(int n, int nchannels)
 
 	for(i=0;i<n;i++)	{
 		clients[i].id = i;
+		clients[i].ci = ch_info_client_create();
 		clients[i].state = CLIENT_STATE_WORKING;
 		clients[i].plan = (sm_client_plan*)malloc(sizeof(sm_client_plan));
 		clients[i].plan->arrival = arrival;
