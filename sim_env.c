@@ -36,6 +36,7 @@ void sim_env_init(sim_env* se)
 	se->el->evht->handlers[ET_CLIENT_HB_REQ] = ev_handle_client_hb_req;
 	se->el->evht->handlers[ET_CLIENT_BC_REQ] = ev_handle_client_bc_req;
 	se->el->evht->handlers[ET_CLIENT_SWITCHING] = ev_handle_client_switching;
+	se->el->evht->handlers[ET_CLIENT_SRV_REQ] = ev_handle_client_srv_req;
 
 
 	se->nclients = CLIENT_COUNT;
@@ -66,6 +67,12 @@ void sim_env_init(sim_env* se)
 			if(j==0)	{
 				//mmm: not implemented
 				//not switching
+				e = ev_create(ET_CLIENT_SRV_REQ, ltemp);
+				ed_csr = (evdata_client_srv_req*)malloc(sizeof(evdata_client_srv_req));
+				ed_csr->uid = client->id;
+				ed_csr->chid = client->plan->switchings[j]->chid;
+				e->data = ed_csr;
+				e->agent = (void*)client;
 			}
 			else	{
 				e = ev_create(ET_CLIENT_SWITCHING, ltemp);

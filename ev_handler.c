@@ -292,6 +292,27 @@ void ev_handle_client_switching(ev_loop* el, ev* e)
 	}
 }
 
+void ev_handle_client_srv_req(ev_loop* el, ev* e)	{	//mmmm: server srv req should be added indirectly through this event
+	evdata_server_srv_req* ed;
+	ev* newe;
+	sm_client* client;
+
+	client = (sm_client*)e->agent;
+
+	newe = ev_create(ET_SERVER_SRV_REQ, e->time+1); //mmm: time should be paramed	
+	ed = (evdata_server_srv_req*)malloc(sizeof(evdata_server_srv_req));
+	ed->uid = client->id;
+	ed->chid = ((evdata_client_srv_req*)e->data)->chid;
+	newe->data = ed;
+	newe->agent = (void*)se.server;
+
+	ev_list_add(el->evlist, newe);
+		
+}
+
+
+
+
 void handle_hbrsp(ev_loop* el,ev* e)
 {
 }

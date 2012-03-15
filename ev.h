@@ -85,6 +85,7 @@ typedef struct evdata_client_bc_req	{
 }evdata_client_bc_req;
 
 //mmmm: not used yet
+//mmmmmm: should set current chid after this event handled
 typedef struct evdata_client_srv_req	{
 	int uid;
 	int chid;
@@ -102,6 +103,7 @@ typedef struct evdata_client_switching{
 //a sorted,uni directional list (by time, ascending)
 typedef struct ev_list	{
 	ev* head;
+	int size;
 }ev_list;	//what's the char of list op? comparing to stack and queue? where to get & where to put?
 
 /*------- event handler table--------------------------*/

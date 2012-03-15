@@ -16,6 +16,7 @@ void ev_handle_client_power_on(ev_loop* el, ev* e);
 void ev_handle_client_hb_req(ev_loop* el, ev* e);
 void ev_handle_client_bc_req(ev_loop* el, ev* e);
 void ev_handle_client_switching(ev_loop* el, ev* e);
+void ev_handle_client_srv_req(ev_loop* el, ev* e);	//mmmmmmmmmmmmm: server srv req should be added indirectly through this event, and current chid should be set
 
 void ev_handle_hbrsp(ev_loop* el,ev* e);
 void ev_handle_bcreq(ev_loop* el,ev* e);

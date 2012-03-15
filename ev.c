@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "sm_client.h"
 
 /* ----- */
 alisttpl_struct_impl(evdata_server_hb_req)
@@ -28,6 +29,7 @@ ev_list* ev_list_create()
 {
 	ev_list* l = (ev_list*)malloc(sizeof(ev_list));
 	l->head = NULL;
+	l->size = 0;
 	return l;
 }
 
@@ -55,6 +57,7 @@ ev* ev_list_pop_head(ev_list* l)
 	int result;
 	e = ev_list_get(l, 0);
 	if(e)	{
+		//printf("0 get, e not null, to remove\n");
 		ev_list_remove_without_destroy(l, 0, &result);	//mmm: no error handling
 	}
 	return e;
@@ -100,6 +103,7 @@ static ev* ev_list_remove_without_destroy(ev_list* l, int i, int* result)
 	ev* pre;
 	int j;
 
+	//printf("111\n");
 	if(!l->head)	{	//head is null
 		if(i==0)	{
 			*result = 0;
@@ -111,17 +115,20 @@ static ev* ev_list_remove_without_destroy(ev_list* l, int i, int* result)
 		}
 	}
 
+	//printf("222\n");
 	size = 0;
 	tmp = l->head;
-	while(tmp!=NULL)	{
+	while(tmp!=NULL)	{	//mmm: could get size directly
 		tmp = tmp->next;
 		size++;
 	}
+	printf("2.5\n");
 	if(i>=size)	{
 		*result = -2;
 		return NULL;
 	}
 
+	//printf("333\n");
 	//init pointer
 	pre = NULL;
 	e = l->head;
@@ -132,6 +139,8 @@ static ev* ev_list_remove_without_destroy(ev_list* l, int i, int* result)
 	}
 
 	//mmm: right?
+	*result = 0;
+	l->size = l->size-1;
 	if(pre==NULL)	{	//remove head
 		l->head = e->next;
 		return e;	//mmm: right?
@@ -141,7 +150,6 @@ static ev* ev_list_remove_without_destroy(ev_list* l, int i, int* result)
 		return e;
 	}
 
-	*result = 0;
 }
 
 
@@ -168,11 +176,14 @@ int ev_list_add(ev_list* l, ev* enew)
 
 	if(!l->head)	{
 		l->head = enew;
+		//printf("enew time=%d\n", enew->time);
+		enew->next = NULL;
+		l->size = l->size + 1;
 		return 0;
 	}
 
 	pre = e = l->head;
-	while(!e)	{
+	while(e)	{
 		if(e->time > enew->time)	{
 			break;
 		}
@@ -181,14 +192,18 @@ int ev_list_add(ev_list* l, ev* enew)
 		e = e->next;
 	}
 
+	enew->next = e;
 	if(e==l->head)	{//insert before head
-		enew->next = e;
+		//printf("e=head%d\n", e);
 		l->head = enew;
 	}
 	else	{	//other
+		printf("e!=head\n");
 		pre->next = enew;
 	}
 
+
+	l->size = l->size + 1;
 	return 0;
 }
 

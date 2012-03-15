@@ -126,15 +126,15 @@ void generate_duration(int total, int* t_durations)
 	shuffle_int(t_durations, total);
 
 
-	/*
+	printf("\n==================duration====================\n");
 		 for(i=0;i<total;i++)	{
 		 printf("%d ", t_durations[i]);
 		 if(i%30==0)	{
 		 printf("\n");
 		 }
 		 }
-		 */
 
+	printf("\n==================duration_end====================\n");
 
 	/*
 		 nsum = 0;
@@ -268,7 +268,7 @@ sm_client* generate_input_clients_simple_1(int n, int nchannels)
 		printf("\n===user===%d\n", i);
 		for(j=0;j<nswitchings;j++)	{
 			clients[i].plan->switchings[j]->chid = chids[i*nswitchings+j];
-			printf("%d, ", chids[i*nswitchings+j]);
+			printf("%d:%d, ", chids[i*nswitchings+j], durations[i*nswitchings+j]);
 		}
 	}
 	printf("3\n");
