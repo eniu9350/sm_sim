@@ -39,11 +39,14 @@ typedef struct evdata_server_hb_req	{
 	int chid;	//channel current watching
 }evdata_server_hb_req;
 
+/*
 typedef struct evdata_server_hb_req_list	{
 	struct evdata_server_hb_req** list;
 	int size;
 	int capacity;
 }evdata_server_hb_req_list;
+*/
+alisttpl_struct(evdata_server_hb_req)
 
 typedef struct evdata_server_hb_rsp	{
 	int code;
@@ -113,6 +116,4 @@ int ev_list_remove(ev_list* l, int i);
 int ev_list_add(ev_list* l, ev* e);
 
 /* -------- */
-evdata_server_hb_req_list* evdata_server_hb_req_list_create();
-void evdata_server_hb_req_list_add(evdata_server_hb_req_list *rl, evdata_server_hb_req* req); 
 #endif

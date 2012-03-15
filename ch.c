@@ -1,7 +1,5 @@
 #include "ch.h"
 
-
-
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -22,8 +20,10 @@ int ch_leave(ch* ch, int uid)
 	return 0;
 }
 
+/* ch alist */
+alisttpl_struct_impl(ch)
 
-void ch_info_get_update_list(ch_info* ci, int* uidlist, int* chlist, int n, ch_update** culist, int* nculist)
+void ch_alist_get_update_list(ch_info* ci, int* uidlist, int* chlist, int n, ch_update** culist, int* nculist)
 {
 	char* flag;	
 	int* pre;//previous channel
@@ -40,7 +40,7 @@ void ch_info_get_update_list(ch_info* ci, int* uidlist, int* chlist, int n, ch_u
 		flag[i] = 0;
 	}
 	for(i=0;i<n;i++)	{
-		ch = ch_info_get_by_uid(ci, uidlist[i]);
+		ch = ch_alist_get_by_uid(ci, uidlist[i]);
 		if(ch == NULL)	{
 			perror("chid NULL when batch processing update!\n");
 			continue;
@@ -107,17 +107,17 @@ void ch_info_get_update_list(ch_info* ci, int* uidlist, int* chlist, int n, ch_u
 }
 
 
-ch* ch_info_get_by_uid(ch_info* ci, int uid)
+ch* ch_alist_get_by_uid(ch_info* ci, int uid)
 {
 	int i,j;
 	for(i=0;i<ci->size;i++)	{
-		if(ci->chlist[i]->users==NULL)	{
+		if(ci->list[i]->users==NULL)	{
 			perror("userlist in ch null!\n");
 			return NULL;
 		}
-		for(j=0;j<ci->chlist[i]->users->size;j++)	{
-			if(ci->chlist[i]->users->list[j] == uid)	{
-				return ci->chlist[i];
+		for(j=0;j<ci->list[i]->users->size;j++)	{
+			if(ci->list[i]->users->list[j] == uid)	{
+				return ci->list[i];
 			}
 		}
 	}
@@ -126,25 +126,26 @@ ch* ch_info_get_by_uid(ch_info* ci, int uid)
 	return NULL;
 }
 
-ch* ch_info_get_by_sgid_and_chid(ch_info* ci, int sgid, int chid)
+ch* ch_alist_get_by_sgid_and_chid(ch_info* ci, int sgid, int chid)
 {
 	int i;
 	for(i=0;i<ci->size;i++)	{
-		if(ci->chlist[i]->sgid == sgid && ci->chlist[i]->chid == chid)	{
-			return ci->chlist[i];
+		if(ci->list[i]->sgid == sgid && ci->list[i]->chid == chid)	{
+			return ci->list[i];
 		}
 	}
 	return NULL;
 }
 
 /*------- chinfo ops --------------------------*/
+/*
 ch_info* ch_info_create()
 {
 	ch_info* ci;
 	ci = (ch_info*)malloc(sizeof(ch_info));
 	ci->capacity = 200;
 	ci->size = 0;
-	ci->chlist = (ch**)malloc(ci->capacity*sizeof(ch*));
+	ci->list = (ch**)malloc(ci->capacity*sizeof(ch*));
 	return ci;
 }
 
@@ -174,6 +175,7 @@ void ch_info_add(ch_info* ci, ch* c)
 	ci->chlist[ci->size] = c;
 	ci->size = ci->size+1;
 }
+*/
 
 
 ch_info_client* ch_info_client_create()

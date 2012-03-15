@@ -2,6 +2,7 @@
 #define _SM_SIM_CH_
 
 #include "user.h"
+#include "alisttpl.h"
 
 /*------- channel --------------------------*/
 typedef struct freq	{
@@ -25,11 +26,16 @@ typedef struct ch_client	{
 	long ts;	//timestamp
 }ch_client;
 
+/*
 typedef struct ch_info	{
 	ch** chlist;	//mmm: changed from * to **, ok?
 	int size;
 	int capacity;
 }ch_info;
+*/
+alisttpl_struct(ch)
+typedef ch_alist ch_info;
+
 
 typedef struct ch_info_client	{
 	ch_client** chlist;	//mmm: chaned from * to **, ok?
@@ -52,14 +58,16 @@ typedef struct ch_update	{
 /*------- ch ops --------------------------*/
 int ch_join(ch* c, int uid);
 int ch_leave(ch* c, int uid);
-void ch_info_get_update_list(ch_info* ci, int* uidlist, int* chlist, int n, ch_update** culist, int* nculist);
-ch* ch_info_get_by_uid(ch_info* ci, int uid);
-ch* ch_info_get_by_sgid_and_chid(ch_info* ci, int sgid, int chid);
 
 
 /*------- chinfo ops --------------------------*/
+/*
 ch_info* ch_info_create();
 void ch_info_add(ch_info* ci, ch* c);
+*/
+void ch_alist_get_update_list(ch_alist* ci, int* uidlist, int* chlist, int n, ch_update** culist, int* nculist);
+ch* ch_alist_get_by_uid(ch_alist* ci, int uid);
+ch* ch_alist_get_by_sgid_and_chid(ch_alist* ci, int sgid, int chid);
 ch_info_client* ch_info_client_create();
 
 /*------- channel_update ops --------------------------*/

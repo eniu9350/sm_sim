@@ -13,14 +13,19 @@ extern sim_env se;	//mmm: trival --- right?
 void ev_handle_server_hb_req(ev_loop* el,ev* e)
 {
 	printf("ev_handle_server_hb_req\n");
-	/*
+	
 	//mmm: tmp
 	//context_global* gctx;
-	printf("ENV NULL@handle_hbreq!!!!!!!!!!!!!!!!!!\n");
+	//printf("ENV NULL@handle_hbreq!!!!!!!!!!!!!!!!!!\n");
 
 	//save request
 
-	hbreq_list* buf = gctx->server->hbreq_buf;
+	//mmmmmm: should purge reqbuf each round!
+	
+	evdata_server_hb_req_alist* buf = se.server->buf_hb_req;
+	//mmm: check e type
+	add_evdata_server_hb_req(buf, e->data);
+	/*
 	if(buf->size==buf->capacity)	{
 	printf("buf capacity exceeded @ handle_hbreq!!!!!!!!!!!\n");
 	}
@@ -51,8 +56,8 @@ void ev_handle_server_bc_req(ev_loop* el, ev* e)
 	chlist = (ch_client**)malloc(server->ci->size*sizeof(ch_client*));
 	for(i=0;i<server->ci->size;i++)	{
 		chlist[i] = (ch_client*)malloc(sizeof(ch_client));
-		chlist[i]->chid = server->ci->chlist[i]->chid;
-		chlist[i]->f = server->ci->chlist[i]->f;	//mmm: should copy?
+		chlist[i]->chid = server->ci->list[i]->chid;
+		chlist[i]->f = server->ci->list[i]->f;	//mmm: should copy?
 	}
 
 	ed = (evdata_client_bc_req*)malloc(sizeof(evdata_client_bc_req));
@@ -107,12 +112,12 @@ void ev_handle_server_check_hb(ev_loop* el, ev* e)
 	}
 
 	//get update list
-	ch_info_get_update_list(server->ci, uidlist, chlist, n, culist, &nculist);
+	ch_alist_get_update_list(server->ci, uidlist, chlist, n, culist, &nculist);
 
 	//check res alloc and res rel
 	for(i=0;i<nculist;i++)	{
 		if(culist[i]->leave->size == 0)	{
-			if(ch_info_get_by_sgid_and_chid(server->ci, culist[i]->sgid, culist[i]->chid) == NULL)	{//alloc res
+			if(ch_alist_get_by_sgid_and_chid(server->ci, culist[i]->sgid, culist[i]->chid) == NULL)	{//alloc res
 				culist[i]->processed = 1;
 				//mmm: should log
 				ltemp = 1;	//mmm: constant alloc -> ra req
@@ -127,7 +132,7 @@ void ev_handle_server_check_hb(ev_loop* el, ev* e)
 		}
 
 		if(culist[i]->join->size == 0)	{
-			ch = ch_info_get_by_sgid_and_chid(server->ci, culist[i]->sgid, culist[i]->chid);
+			ch = ch_alist_get_by_sgid_and_chid(server->ci, culist[i]->sgid, culist[i]->chid);
 			//mmm: heuristics here, right?(forcing a check will gurantee ok)
 			if(ch->users->size == culist[i]->leave->size)	{//rel res
 				culist[i]->processed = 1;
@@ -146,7 +151,7 @@ void ev_handle_server_check_hb(ev_loop* el, ev* e)
 
 	for(i=0;i<nculist;i++)	{
 		if(culist[i]->processed==0)	{	//just modify data
-			ch = ch_info_get_by_sgid_and_chid(server->ci, culist[i]->sgid, culist[i]->chid);
+			ch = ch_alist_get_by_sgid_and_chid(server->ci, culist[i]->sgid, culist[i]->chid);
 			for(j=0;j<culist[i]->join->size;j++)	{
 				ch_join(ch, culist[i]->join->list[j]);
 			}
