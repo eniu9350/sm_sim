@@ -62,7 +62,6 @@ void sim_env_init(sim_env* se)
 	printf("simenvinit 1.5, i=%d\n", i);
 		client = se->clients[i];
 		ltemp = client->plan->arrival;
-		printf("ltemp=%ld\n", ltemp);
 		for(j=0;j<client->plan->nswitchings;j++)	{
 			if(j==0)	{
 				//mmm: not implemented
@@ -81,10 +80,18 @@ void sim_env_init(sim_env* se)
 				e->data = (void*)ed_cs;
 				e->agent = (void*)client;
 			}
+			printf("ltemp=%ld\n", ltemp);
 			ltemp += client->plan->switchings[j]->duration;
 
 			ev_list_add(se->el->evlist, e);
+			printf("evlistsize=%d, added e time=%ld, lasttime=%ld\n", se->el->evlist->size, e->time, (ev_list_get(se->el->evlist, se->el->evlist->size-1))->time );
 		}
+	}
+
+	//mmmm:temp
+	for(i=0;i<se->el->evlist->size;i++)	{
+		e = ev_list_get(se->el->evlist, i);
+		printf("in sim1, time=%ld\n", e->time);
 	}
 
 	printf("simenvinit 2\n");
@@ -106,7 +113,7 @@ void sim_env_init(sim_env* se)
 	/*-- add server broadcast event--*/
 	ltemp = 30;	//mmm: bc interval, should be loaded
 	for(i=se->server->start+ltemp;i<se->server->end;i+=ltemp)	{	//mmm: < should be <=?
-	printf("simenvinit 3.1 i=%d\n", i);
+		printf("simenvinit 3.1 i=%d\n", i);
 		e = ev_create(ET_SERVER_BC_REQ, i);
 		ed_sbr = (evdata_server_bc_req*)malloc(sizeof(evdata_server_bc_req));
 		e->data = (void*)ed_sbr;
@@ -116,6 +123,11 @@ void sim_env_init(sim_env* se)
 	}
 	printf("simenvinit end, server.cisize=%d\n", se->server->ci->size);
 
+	//mmmm:temp
+	for(i=0;i<se->el->evlist->size;i++)	{
+		e = ev_list_get(se->el->evlist, i);
+		printf("in sim, time=%ld\n", e->time);
+	}
 }
 
 

@@ -45,7 +45,6 @@ ev* ev_list_get(ev_list* l, int i)
 
 	for(j=0;j<i;j++)	{
 		e = e->next;
-		j++;
 	}
 
 	return e;

@@ -30,6 +30,13 @@ void ev_loop_loop(ev_loop* el)
 	evlist = (ev**)malloc(20000*sizeof(ev*));
 	elisttmp = (ev**)malloc(20000*sizeof(ev*));
 
+	//mmmm:temp
+	for(i=0;i<el->evlist->size;i++)	{
+		e = ev_list_get(el->evlist, i);
+		printf("time=%ld\n", e->time);
+	}
+
+
 	int evlistsize = -1;	//mmm: can its addr be used(e.g. &evlistsize) when not initialized
 	while(1)	{
 		printf("evloop 1, now=%ld, evlist.size=%d\n", el->now, el->evlist->size);
