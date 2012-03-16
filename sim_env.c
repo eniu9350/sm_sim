@@ -42,6 +42,8 @@ void sim_env_init(sim_env* se)
 	se->nclients = CLIENT_COUNT;
 	//mmm: start end of server not set
 	se->server = sm_server_create();
+
+	se->nsrvreq = 0;
 	
 
 	/*--- add clients ---*/

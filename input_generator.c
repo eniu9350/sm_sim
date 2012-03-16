@@ -210,9 +210,9 @@ void genenerate_switching_chid(int nclients, int nswitchings, int nchannel, int*
 	for(i=0;i<nclients;i++)	{
 		for(j=0;j<nswitchings-1;j++)	{
 			if(flag[i*(nswitchings-1)+j] == 1)	{
-			chids[i*(nswitchings)+j+1] = chids[i*nswitchings+j]+1;
+				chids[i*(nswitchings)+j+1] = chids[i*nswitchings+j]+1;
 			} else if(flag[i*(nswitchings-1)+j] == 2)	{
-			chids[i*nswitchings+j+1] = chids[i*nswitchings+j]-1;
+				chids[i*nswitchings+j+1] = chids[i*nswitchings+j]-1;
 			}	else	{	//non-linear
 				srand(chids[i*nswitchings+j]);
 				while(1)	{
@@ -257,7 +257,7 @@ sm_client* generate_input_clients_simple_1(int n, int nchannels)
 		for(j=0;j<nswitchings;j++)	{
 			clients[i].plan->switchings[j] = (sm_client_plan_switching_entry*)malloc(sizeof(sm_client_plan_switching_entry));
 			clients[i].plan->switchings[j]->duration = durations[i*nswitchings+j];
-//			printf("genduration=%ld\n", durations[i*nswitchings+j]);
+			//			printf("genduration=%ld\n", durations[i*nswitchings+j]);
 		}
 	}
 

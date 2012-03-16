@@ -16,6 +16,14 @@ ev_loop* ev_loop_create()
 	return el;
 }
 
+void ev_loop_handle_event(ev_loop* el, ev* e)
+{
+	void (*handler)(ev_loop*, ev*);	//mmmm: remember this form of decl.
+	handler = (void (*)(ev_loop*, ev*))(el->evht->handlers[e->type]);
+	e->processed = 1;
+	(*handler)(el, e);
+}
+
 void ev_loop_loop(ev_loop* el)
 {
 	ev* e;
@@ -41,8 +49,9 @@ void ev_loop_loop(ev_loop* el)
 	while(1)	{
 		printf("evloop 1, now=%ld, evlist.size=%d\n", el->now, el->evlist->size);
 		//mmm: if all client ends and server no events, end
-		e = ev_list_pop_head(el->evlist);
-		printf("evloop 1.1, now=%ld\n", el->now);
+		//e = ev_list_pop_head(el->evlist);
+		e = ev_list_get(el->evlist, 0);
+		//printf("evloop 1.1, etime=%ld\n", e->time);
 
 		if(e==NULL)	{
 			break;
@@ -52,12 +61,14 @@ void ev_loop_loop(ev_loop* el)
 			continue;
 		}
 
+		ev_list_pop_head(el->evlist);
+
 
 		e2 = e;
-		
+
 		printf("evloop 1.5\n");
 		ielisttmp = 0;
-		while(e2->time == e->time)	{
+		while(e2!=NULL && e2->time == e->time)	{
 			ev_list_pop_head(el->evlist);
 			printf("while %d, evtype=%d\n", ielisttmp, e2->type);
 			elisttmp[ielisttmp++] = e2;
@@ -69,16 +80,21 @@ void ev_loop_loop(ev_loop* el)
 		//i) process ET_CHECK_HB
 		for(i=0;i<ielisttmp;i++)	{
 			if(elisttmp[i]->type == ET_SERVER_CHECK_HB)	{
+				ev_loop_handle_event(el, elisttmp[i]);
 				break;
 			}
 		}
-		if(i!=ielisttmp)	{
-			ev_loop_fire_event(el, elisttmp[i]);
+
+		//ii) processed others
+		for(i=0;i<ielisttmp;i++)	{
+			if(elisttmp[i]->processed == 0)	{
+				ev_loop_handle_event(el, elisttmp[i]);
+			}
 		}
 
-			
+
 		printf("evloop 3, etype=%d\n", e->type);
-		
+
 		//ev_list_gets_by_time(el->evlist, el->now, el->now+demul_interval, evlist, &evlistsize);
 		handler = (void (*)(ev_loop*, ev*))(el->evht->handlers[e->type]);
 		//printf("handler=%d\n", handler);

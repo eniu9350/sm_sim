@@ -182,6 +182,9 @@ void ev_handle_server_srv_req(ev_loop* el, ev* e)
 	sm_client* client;
 	int* u;
 
+	//log
+	se.nsrvreq++;
+
 	client = sim_env_get_client_by_uid(ed->uid);
 
 	printf("ev_handle_server_srv_req\n");

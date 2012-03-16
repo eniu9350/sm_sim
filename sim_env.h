@@ -20,6 +20,8 @@ typedef struct sim_env	{
 	
 	sm_client** clients;
 	int nclients;
+
+	long nsrvreq;
 	
 }sim_env;
 

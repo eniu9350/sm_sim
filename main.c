@@ -36,6 +36,8 @@ int main()
 
 	ev_loop_loop(se.el);
 
+	printf("===sum===\nSERVER_SRV_REQ COUNT = %d\n", se.nsrvreq);
+
 
 	/*
 	int n;
