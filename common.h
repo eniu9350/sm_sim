@@ -21,12 +21,7 @@ struct ev_loop;
 struct evhandler_table;
 
 /*------- prop container --------------------------*/
-typedef union val	{
-	int type;
-	int n;
-	char s[100];
-}val;
-
+/*
 typedef struct property	{
 	char k[50];
 	val v;
@@ -34,15 +29,6 @@ typedef struct property	{
 
 typedef struct properties	{
 }properties;
+*/
 
 
-/*------- context --------------------------*/
-typedef struct context_global	{
-	long now;
-	struct ev_loop* el;
-	struct evhandler_table* ehtable;
-	server* server;
-	//logging utils
-}context_global;
-
-#endif

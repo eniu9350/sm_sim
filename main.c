@@ -5,6 +5,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include "ev.h"
+#include "sim_env.h"
 
 sim_env se;
 
@@ -36,7 +37,7 @@ int main()
 
 	ev_loop_loop(se.el);
 
-	printf("===sum===\nSERVER_SRV_REQ COUNT = %d\n", se.nsrvreq);
+	printf("===sum===\nSERVER_SRV_REQ COUNT = %ld\n", sim_env_stat_get(STAT_ID_SERVER_SRV_REQ_COUNT));
 
 
 	/*

@@ -183,7 +183,8 @@ void ev_handle_server_srv_req(ev_loop* el, ev* e)
 	int* u;
 
 	//log
-	se.nsrvreq++;
+	sim_env_stat_inc(STAT_ID_SERVER_SRV_REQ_COUNT);	
+	//se.nsrvreq++;
 
 	client = sim_env_get_client_by_uid(ed->uid);
 

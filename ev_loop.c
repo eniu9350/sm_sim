@@ -98,7 +98,7 @@ void ev_loop_loop(ev_loop* el)
 		//ev_list_gets_by_time(el->evlist, el->now, el->now+demul_interval, evlist, &evlistsize);
 		handler = (void (*)(ev_loop*, ev*))(el->evht->handlers[e->type]);
 		//printf("handler=%d\n", handler);
-		printf("evloop 4, handler=%d, e->type=%d\n", handler, e->type);
+		//printf("evloop 4, handler=%d, e->type=%d\n", handler, e->type);
 		(*handler)(el, e);
 
 		printf("evloop end\n");

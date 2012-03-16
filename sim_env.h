@@ -11,7 +11,44 @@
 
 
 
+/* ----------- type ----------- */
+#define VALUE_TYPE_INT 1
+#define VALUE_TYPE_LONG 2
+#define VALUE_TYPE_CHARARRAY 3
 
+#define VALUE_ID_INTERVAL_CLIENT_HEARTBEAT 1
+#define VALUE_ID_INTERVAL_SERVER_BROADCAST 2
+
+/* ----------- config ----------- */
+#define CONFIG_TYPE_INFO_SIZE 1000
+
+/* ----------- stat ----------- */
+#define STAT_SIZE 1000
+
+#define STAT_ID_SERVER_SRV_REQ_COUNT 1
+
+typedef union value	{
+	int i;
+	long l;
+	char s[100];
+}value;
+
+typedef struct value_type	{
+	int id;
+	int type;	//1.int; 2.long; 3.char[];
+}value_type;
+
+
+typedef struct sim_config	{
+	value val[1000];
+	value_type types[CONFIG_TYPE_INFO_SIZE];
+}sim_config;
+
+typedef struct sim_stats	{
+	long val[STAT_SIZE];
+}sim_stats;
+
+/* ----------- sim env ----------- */
 typedef struct sim_env	{
 	ev_loop* el;
 
@@ -21,13 +58,25 @@ typedef struct sim_env	{
 	sm_client** clients;
 	int nclients;
 
-	long nsrvreq;
+	sim_config* config;
+	sim_stats* stat;
 	
 }sim_env;
 
-void sim_env_init(sim_env* se);
+/* ------ sim env ops -----------*/
+void sim_env_init();
 
-/* ------ client -----------*/
+/* ------ client info related ops -----------*/
 sm_client* sim_env_get_client_by_uid(int uid);
+
+/* ------ config info related ops -----------*/
+void* sim_env_get_config(int configid);
+int sim_env_set_config(int configid, void* v);
+
+/* ------ stat related ops -----------*/
+void	sim_env_stat_init();
+int sim_env_stat_set(int statid, long v);
+long sim_env_stat_get(int statid);
+int sim_env_stat_inc(int statid);
 
 #endif
