@@ -50,6 +50,9 @@ void ev_loop_loop(ev_loop* el)
 		//printf("evloop 1, now=%ld, evlist.size=%d\n", el->now, el->evlist->size);
 		//mmm: if all client ends and server no events, end
 		//e = ev_list_pop_head(el->evlist);
+		if(el->evlist->size%1000==0)	{
+			printf("looping... events queue length: %d\n", el->evlist->size);
+		}
 		e = ev_list_get(el->evlist, 0);
 		//printf("evloop 1.1, etime=%ld\n", e->time);
 

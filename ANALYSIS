@@ -11,3 +11,18 @@ starting channel same;
 200c, 50clients,150 sw/c => res_app = 7464
 200c, 50clients,200 sw/c => res_app = 9905
 200c, 50clients,250 sw/c => res_app = 12266
+
+
+
+200ch, 100cl*100s => res_app = 9895
+200ch, 200cl*100s => res_app = 19329
+200ch, 300cl*100s => res_app = 28270
+200ch, 400cl*100s => res_app = 36807
+
+
+
+
+
+//------q---
+how to decide which handler;
+queue sorting needed?

@@ -6,8 +6,8 @@
 
 
 /* ----------- global settings ----------- */
-#define CLIENT_COUNT 1000
 #define CHANNEL_COUNT 200
+#define CLIENT_COUNT 400
 #define SWITCHING_COUNT 100
 
 
