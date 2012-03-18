@@ -228,25 +228,25 @@ void genenerate_switching_chid(int nclients, int nswitchings, int nchannel, int*
 }
 
 
-sm_client* generate_input_clients_simple_1(int n, int nchannels)
+sm_client* generate_input_clients_simple_1(int nclients, int nswitchings, int nchannels)
 {
 	sm_client* clients;
 	int i,j;
-	int nswitchings;	//mmm: should be renamed to nchids!!!
+	//int nswitchings;	//mmm: should be renamed to nchids!!!
 	long arrival;	//same arrival time for each client
 	int* durations;
 	int* chids;
 
-	nswitchings = 50;
+	//nswitchings = 50;
 	arrival = 1;
 
 	//generate durations
-	durations = (int*)malloc(n*nswitchings*sizeof(int));
-	generate_duration(n*nswitchings, durations);	
+	durations = (int*)malloc(nclients*nswitchings*sizeof(int));
+	generate_duration(nclients*nswitchings, durations);	
 
-	clients = (sm_client*)malloc(n*sizeof(sm_client));
+	clients = (sm_client*)malloc(nclients*sizeof(sm_client));
 
-	for(i=0;i<n;i++)	{
+	for(i=0;i<nclients;i++)	{
 		clients[i].id = i;
 		clients[i].ci = ch_info_client_create();
 		clients[i].state = CLIENT_STATE_WORKING;
@@ -262,9 +262,9 @@ sm_client* generate_input_clients_simple_1(int n, int nchannels)
 	}
 
 	//generate chids
-	chids = (int*)malloc(n*nswitchings*sizeof(int));
-	genenerate_switching_chid(n, nswitchings, nchannels, chids);
-	for(i=0;i<n;i++)	{
+	chids = (int*)malloc(nclients*nswitchings*sizeof(int));
+	genenerate_switching_chid(nclients, nswitchings, nchannels, chids);
+	for(i=0;i<nclients;i++)	{
 		printf("\n===user===%d\n", i);
 		for(j=0;j<nswitchings;j++)	{
 			clients[i].plan->switchings[j]->chid = chids[i*nswitchings+j];

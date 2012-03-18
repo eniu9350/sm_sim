@@ -77,7 +77,7 @@ void sim_env_init()
 	
 
 	/*--- add clients ---*/
-	clients = generate_input_clients_simple_1(se.nclients, CHANNEL_COUNT);
+	clients = generate_input_clients_simple_1(se.nclients, SWITCHING_COUNT, CHANNEL_COUNT);
 
 	se.clients = (sm_client**)malloc(se.nclients*sizeof(sm_client*));
 	for(i=0;i<se.nclients;i++)	{

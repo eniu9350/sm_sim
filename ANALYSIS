@@ -1,0 +1,10 @@
+assumption:
+distribution of duration conforms to "xxx" paper;
+starting channel same;
+
+
+
+
+
+50clients,50 sw/c => res_app = 2482
+50clients,200 sw/c => res_app = 9905
