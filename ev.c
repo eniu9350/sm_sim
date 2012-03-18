@@ -121,7 +121,7 @@ static ev* ev_list_remove_without_destroy(ev_list* l, int i, int* result)
 		tmp = tmp->next;
 		size++;
 	}
-	printf("2.5\n");
+	//printf("2.5\n");
 	if(i>=size)	{
 		*result = -2;
 		return NULL;
@@ -197,7 +197,7 @@ int ev_list_add(ev_list* l, ev* enew)
 		l->head = enew;
 	}
 	else	{	//other
-		printf("e!=head\n");
+		//printf("e!=head\n");
 		pre->next = enew;
 	}
 

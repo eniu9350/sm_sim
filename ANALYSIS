@@ -6,5 +6,8 @@ starting channel same;
 
 
 
-50clients,50 sw/c => res_app = 2482
-50clients,200 sw/c => res_app = 9905
+200c, 50clients,50 sw/c => res_app = 2482
+200c, 50clients,100 sw/c => res_app = 4972
+200c, 50clients,150 sw/c => res_app = 7464
+200c, 50clients,200 sw/c => res_app = 9905
+200c, 50clients,250 sw/c => res_app = 12266

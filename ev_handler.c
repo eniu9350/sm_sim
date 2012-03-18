@@ -13,7 +13,7 @@ extern sim_env se;	//mmm: trival --- right?
 /*------- server event handler--------------------------*/
 void ev_handle_server_hb_req(ev_loop* el,ev* e)
 {
-	printf("ev_handle_server_hb_req\n");
+	//printf("ev_handle_server_hb_req\n");
 	
 	//mmm: tmp
 	//context_global* gctx;
@@ -38,12 +38,12 @@ void ev_handle_server_hb_req(ev_loop* el,ev* e)
 void ev_handle_server_hb_resp(ev_loop* el,ev* e)
 {
 	//mmm: not implemented yet
-	printf("ev_handle_server_hb_resp\n");
+	//printf("ev_handle_server_hb_resp\n");
 }
 
 void ev_handle_server_bc_req(ev_loop* el, ev* e)
 {
-	printf("ev_handle_server_bc_req\n");
+	//printf("ev_handle_server_bc_req\n");
 	sm_server* server;
 	sm_client* client;
 	ev* newe;
@@ -98,7 +98,7 @@ void ev_handle_server_check_hb(ev_loop* el, ev* e)
 	long ltemp;
 	ch* c2;
 
-	printf("ev_handle_server_check_hb\n");
+	//printf("ev_handle_server_check_hb\n");
 
 	culist = (ch_update**)malloc(1000*sizeof(ch_update*));	//mmm: large enough?
 
@@ -188,7 +188,7 @@ void ev_handle_server_srv_req(ev_loop* el, ev* e)
 
 	client = sim_env_get_client_by_uid(ed->uid);
 
-	printf("ev_handle_server_srv_req\n");
+	//printf("ev_handle_server_srv_req\n");
 
 	c = ch_alist_get_by_sgid_and_chid(se.server->ci, client->sgid, ed->chid);
 	if(c==NULL)	{
@@ -198,7 +198,7 @@ void ev_handle_server_srv_req(ev_loop* el, ev* e)
 		add_ch(se.server->ci, c);
 	}
 	else	{
-		printf("chinfo: sgid=%d, chid=%d, cisize=%d, reqchid=%d\n", c->sgid, c->chid, se.server->ci->size, ed->chid);
+		//printf("chinfo: sgid=%d, chid=%d, cisize=%d, reqchid=%d\n", c->sgid, c->chid, se.server->ci->size, ed->chid);
 		u = (int*)malloc(sizeof(int));
 		*u = ed->uid;
 		add_user(c->users, u);
@@ -210,12 +210,12 @@ void ev_handle_server_srv_req(ev_loop* el, ev* e)
 void ev_handle_client_power_on(ev_loop* el, ev* e)
 {
 
-	printf("ev_handle_client_power_on\n");
+	//printf("ev_handle_client_power_on\n");
 }
 
 void ev_handle_client_hb_req(ev_loop* el,ev* e)
 {
-	printf("ev_handle_client_hb_req\n");
+	//printf("ev_handle_client_hb_req\n");
 	long ltemp;
 	ev* newe;
 	evdata_server_hb_req* ed;
@@ -245,7 +245,7 @@ void ev_handle_client_hb_req(ev_loop* el,ev* e)
 
 void ev_handle_client_bc_req(ev_loop* el, ev* e)
 {
-	printf("ev_handle_server_bc_req\n");
+	//printf("ev_handle_server_bc_req\n");
 	sm_client* client;
 	evdata_client_bc_req* ed;	
 
@@ -260,7 +260,7 @@ void ev_handle_client_bc_req(ev_loop* el, ev* e)
 
 void ev_handle_client_switching(ev_loop* el, ev* e)
 {
-	printf("ev_handle_client_switching\n");
+	//printf("ev_handle_client_switching\n");
 	evdata_client_switching* ed_cs;
 	sm_client* client;
 	ev* newe;

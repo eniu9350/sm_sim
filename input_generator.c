@@ -126,15 +126,15 @@ void generate_duration(int total, int* t_durations)
 	shuffle_int(t_durations, total);
 
 
-	printf("\n==================duration====================\n");
-		 for(i=0;i<total;i++)	{
-		 printf("%d ", t_durations[i]);
-		 if(i%30==0)	{
-		 printf("\n");
-		 }
-		 }
+	//printf("\n==================duration====================\n");
+	for(i=0;i<total;i++)	{
+		//printf("%d ", t_durations[i]);
+		if(i%30==0)	{
+			//printf("\n");
+		}
+	}
 
-	printf("\n==================duration_end====================\n");
+	//printf("\n==================duration_end====================\n");
 
 	/*
 		 nsum = 0;
@@ -186,26 +186,26 @@ void genenerate_switching_chid(int nclients, int nswitchings, int nchannel, int*
 	shuffle_int(flag, ntotal);
 
 	/*
-	for(i=0;i<ntotal;i++)	{
-		printf("flag_flat[%d] = %d ", i, flag_flat[i]);
+		 for(i=0;i<ntotal;i++)	{
+		 printf("flag_flat[%d] = %d ", i, flag_flat[i]);
+		 }
+		 */
+
+	/*
+		 for(i=0;i<nclients;i++)	{
+		 for(j=0;j<nswitchings-1;j++)	{
+		 printf("i=%d,j=%d,i*(nswitchings-1)+j=%d\n", i, j, i*(nswitchings-1)+j);
+	//flag[i][j] = flag_flat[i*(nswitchings-1)+j];
+	}
 	}
 	*/
 
-	/*
-	for(i=0;i<nclients;i++)	{
-		for(j=0;j<nswitchings-1;j++)	{
-			printf("i=%d,j=%d,i*(nswitchings-1)+j=%d\n", i, j, i*(nswitchings-1)+j);
-			//flag[i][j] = flag_flat[i*(nswitchings-1)+j];
-		}
-	}
-	*/
-		
 	//set init channel id
 	srand(nclients*nswitchings);
 	for(i=0;i<nclients;i++)	{
 		chids[i*(nswitchings)+0] = rand()%nchannel+1;
 	}
-	
+
 
 	for(i=0;i<nclients;i++)	{
 		for(j=0;j<nswitchings-1;j++)	{
@@ -265,13 +265,13 @@ sm_client* generate_input_clients_simple_1(int nclients, int nswitchings, int nc
 	chids = (int*)malloc(nclients*nswitchings*sizeof(int));
 	genenerate_switching_chid(nclients, nswitchings, nchannels, chids);
 	for(i=0;i<nclients;i++)	{
-		printf("\n===user===%d\n", i);
+		//printf("\n===user===%d\n", i);
 		for(j=0;j<nswitchings;j++)	{
 			clients[i].plan->switchings[j]->chid = chids[i*nswitchings+j];
-			printf("%d:%d, ", chids[i*nswitchings+j], durations[i*nswitchings+j]);
+			//printf("%d:%d, ", chids[i*nswitchings+j], durations[i*nswitchings+j]);
 		}
 	}
-	printf("3\n");
+	//printf("3\n");
 
 	return clients;
 
