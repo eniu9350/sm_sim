@@ -246,6 +246,8 @@ sm_client* generate_input_clients_simple_1(int nclients, int nswitchings, int nc
 
 	clients = (sm_client*)malloc(nclients*sizeof(sm_client));
 
+	printf("[GEN_CLIENTS]method: simple\n");
+	printf("[GEN_CLIENTS]step 1. duration generation;\n");
 	for(i=0;i<nclients;i++)	{
 		clients[i].id = i;
 		clients[i].ci = ch_info_client_create();
@@ -261,6 +263,7 @@ sm_client* generate_input_clients_simple_1(int nclients, int nswitchings, int nc
 		}
 	}
 
+	printf("[GEN_CLIENTS]step 2. chid generation;\n");
 	//generate chids
 	chids = (int*)malloc(nclients*nswitchings*sizeof(int));
 	genenerate_switching_chid(nclients, nswitchings, nchannels, chids);

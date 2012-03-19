@@ -39,20 +39,23 @@ void ev_loop_loop(ev_loop* el)
 	elisttmp = (ev**)malloc(20000*sizeof(ev*));
 
 	//mmmm:temp
+	/*
 	for(i=0;i<el->evlist->size;i++)	{
 		e = ev_list_get(el->evlist, i);
 		//printf("time=%ld\n", e->time);
 	}
+	*/
 
 
+	printf("[EV_LOOP]started.\n");
 	int evlistsize = -1;	//mmm: can its addr be used(e.g. &evlistsize) when not initialized
 	while(1)	{
 		//printf("evloop 1, now=%ld, evlist.size=%d\n", el->now, el->evlist->size);
 		//mmm: if all client ends and server no events, end
 		//e = ev_list_pop_head(el->evlist);
-		if(el->evlist->size%1000==0)	{
+		//if(el->evlist->size%1000<10)	{
 			printf("looping... events queue length: %d\n", el->evlist->size);
-		}
+		//}
 		e = ev_list_get(el->evlist, 0);
 		//printf("evloop 1.1, etime=%ld\n", e->time);
 

@@ -35,6 +35,7 @@ void sim_env_init()
 {
 	int i, j;
 	long ltemp;
+	long end;
 	int itemp;
 	ev* e;
 	sm_client* clients;
@@ -83,9 +84,9 @@ void sim_env_init()
 	
 
 	/*--- add clients ---*/
-	printf("Clients generation started.");
+	printf("[GEN_CLIENTS]started.\n");
 	clients = generate_input_clients_simple_1(se.nclients, SWITCHING_COUNT, CHANNEL_COUNT);
-	printf("Clients are generated successfully!");
+	printf("[GEN_CLIENTS]ended.\n");
 
 	se.clients = (sm_client**)malloc(se.nclients*sizeof(sm_client*));
 	for(i=0;i<se.nclients;i++)	{
@@ -97,8 +98,12 @@ void sim_env_init()
 	//mmm: not implemented yet!
 	/*-- add client poweron event--*/
 
+	printf("[ADD_PLANED_EVENTS]started.\n");
+	printf("[ADD_PLANED_EVENTS]step 1. add client switching events.\n");
 	/*-- add client channel change event--*/
+	end = 0;
 	for(i=0;i<se.nclients;i++)	{
+		//printf("client %d\n", i);
 	//printf("simenvinit 1.5, i=%d\n", i);
 		client = se.clients[i];
 		ltemp = client->plan->arrival;
@@ -123,18 +128,25 @@ void sim_env_init()
 //			printf("ltemp=%ld\n", ltemp);
 			ltemp += client->plan->switchings[j]->duration;
 
+			if(ltemp>end)	{
+				end = ltemp;
+			}
+
 			ev_list_add(se.el->evlist, e);
 //			printf("evlistsize=%d, added e time=%ld, lasttime=%ld\n", se.el->evlist->size, e->time, (ev_list_get(se.el->evlist, se.el->evlist->size-1))->time );
 		}
 	}
 
-	//mmmm:temp
+	//mmmm:temp, why so slow???
+	/*
 	for(i=0;i<se.el->evlist->size;i++)	{
 		e = ev_list_get(se.el->evlist, i);
 		//printf("in sim1, time=%ld\n", e->time);
 	}
+	*/
 
 	//printf("simenvinit 2\n");
+	printf("[ADD_PLANED_EVENTS]step 2. add client heartbeat events.\n");
 	/*-- add client heartbeat event--*/
 	ltemp = HEARTBEAT_INTERVAL;	//mmm: hb interval, should be loaded
 	for(i=0;i<se.nclients;i++)	{
@@ -151,9 +163,11 @@ void sim_env_init()
 
 	//printf("simenvinit 3\n");
 	/*-- add server broadcast event--*/
+	printf("[ADD_PLANED_EVENTS]step 3. add server broadcast events.start = %ld, end = %ld, step = %ld\n", se.server->start, end, ltemp);
 	ltemp = BROADCAST_INTERVAL;	//mmm: bc interval, should be loaded
+	se.server->end = end;
 	for(i=se.server->start+ltemp;i<se.server->end;i+=ltemp)	{	//mmm: < should be <=?
-		//printf("simenvinit 3.1 i=%d\n", i);
+		//printf("[debug]i=%d\n", i);
 		e = ev_create(ET_SERVER_BC_REQ, i);
 		ed_sbr = (evdata_server_bc_req*)malloc(sizeof(evdata_server_bc_req));
 		e->data = (void*)ed_sbr;
@@ -164,10 +178,13 @@ void sim_env_init()
 	//printf("simenvinit end, server.cisize=%d\n", se.server->ci->size);
 
 	//mmmm:temp
+	printf("[ADD_PLANED_EVENTS]end\n");
+	/*
 	for(i=0;i<se.el->evlist->size;i++)	{
 		e = ev_list_get(se.el->evlist, i);
 		//printf("in sim, time=%ld\n", e->time);
 	}
+	*/
 }
 
 
