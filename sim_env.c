@@ -45,6 +45,12 @@ void sim_env_init()
 	evdata_client_srv_req* ed_csr;
 
 
+	/*--- show parameter settings ---*/
+	printf("************ Parameters: ************\n");
+	printf("CH=%d, CLIENT=%d, SWITCHINGS(per client)=%d\n", CHANNEL_COUNT, CLIENT_COUNT, SWITCHING_COUNT);
+	printf("HB_INTERVAL=%d, BC_INTERVAL=%d\n", HEARTBEAT_INTERVAL, BROADCAST_INTERVAL);
+	printf("\n");
+
 	/*--- config init ---*/
 	sim_env_config_init();
 	sim_env_config_load();
@@ -128,7 +134,7 @@ void sim_env_init()
 
 	//printf("simenvinit 2\n");
 	/*-- add client heartbeat event--*/
-	ltemp = 30;	//mmm: hb interval, should be loaded
+	ltemp = HEARTBEAT_INTERVAL;	//mmm: hb interval, should be loaded
 	for(i=0;i<se.nclients;i++)	{
 		client = se.clients[i];
 		for(j=client->plan->arrival+ltemp;j<client->plan->departure;j+=ltemp)	{	//mmm: check whether departure time is right
@@ -143,7 +149,7 @@ void sim_env_init()
 
 	//printf("simenvinit 3\n");
 	/*-- add server broadcast event--*/
-	ltemp = 30;	//mmm: bc interval, should be loaded
+	ltemp = BROADCAST_INTERVAL;	//mmm: bc interval, should be loaded
 	for(i=se.server->start+ltemp;i<se.server->end;i+=ltemp)	{	//mmm: < should be <=?
 		//printf("simenvinit 3.1 i=%d\n", i);
 		e = ev_create(ET_SERVER_BC_REQ, i);

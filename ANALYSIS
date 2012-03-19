@@ -13,14 +13,31 @@ starting channel same;
 200c, 50clients,250 sw/c => res_app = 12266
 
 
+=======================================
+HB_INTERVAL=30, BC_INTERVAL=30
+
+
 
 200ch, 100cl*100s => res_app = 9895
 200ch, 200cl*100s => res_app = 19329
 200ch, 300cl*100s => res_app = 28270
 200ch, 400cl*100s => res_app = 36807
+200ch, 500cl*100s => res_app = 45258
+200ch, 600cl*100s => res_app = 53457
+200ch, 600cl*100s => res_app = 61723
+200ch, 800cl*100s => res_app = 68858
+200ch, 900cl*100s => res_app = 76413
+200ch, 1000cl*100s => res_app = 83986
+200ch, 2000cl*100s => res_app = 149659
 
 
 
+
+===============================================
+200 CH, 500 CLIENTS, 100 SWITCHINGS
+
+hb=10/20, bc=30 => res_app = 45408
+hb=10/20, bc=60 => res_app = 45408
 
 
 //------q---
