@@ -119,7 +119,8 @@ void ev_handle_server_check_hb(ev_loop* el, ev* e)
 	//check res alloc and res rel
 	for(i=0;i<nculist;i++)	{
 		if(culist[i]->leave->size == 0)	{
-			if(ch_alist_get_by_sgid_and_chid(server->ci, culist[i]->sgid, culist[i]->chid) == NULL)	{//alloc res
+			c2 = ch_alist_get_by_sgid_and_chid(server->ci, culist[i]->sgid, culist[i]->chid);
+			if(c2 == NULL)	{//alloc res
 				culist[i]->processed = 1;
 				//mmm: should log
 				ltemp = 1;	//mmm: constant alloc -> ra req
@@ -136,14 +137,21 @@ void ev_handle_server_check_hb(ev_loop* el, ev* e)
 				c2 = (ch*)malloc(sizeof(ch));
 				c2->sgid = culist[i]->sgid;
 				c2->chid = culist[i]->chid;
-				//ch->users = 
-
-
-
+				c2->users = create_user_alist();
+				for(j=0;j<culist[i]->join->size;j++)	{	//mmm: could the size be 0?
+					add_user(c2->users, culist[i]->join->list[j]);
+				}
+				add_ch(server->ci, c2);
+			}
+			else	{
+				for(j=0;j<culist[i]->join->size;j++)	{	//mmm: could the size be 0?
+					add_user(c2->users, culist[i]->join->list[j]);
+				}
 			}
 		}
 
 		if(culist[i]->join->size == 0)	{
+			printf("join size=0\n");
 			c = ch_alist_get_by_sgid_and_chid(server->ci, culist[i]->sgid, culist[i]->chid);
 			//mmm: heuristics here, right?(forcing a check will gurantee ok)
 			if(c->users->size == culist[i]->leave->size)	{//rel res
@@ -157,6 +165,18 @@ void ev_handle_server_check_hb(ev_loop* el, ev* e)
 				ed_rr->chid = culist[i]->chid;
 				newe->data = ed_rr;
 				ev_list_add(el->evlist, newe);
+
+				for(j=0;j<server->ci->size;j++)	{
+					//					remove_ch(server->ci, c-&server->ci->list[0]);	//mmmmmm: right?
+					if(server->ci->list[j] == c)	{
+						remove_ch(server->ci, j);
+						printf("remove ok\n");
+						break;
+					}
+				}
+				if(j==server->ci->size)	{
+					perror("remove ch failed\n");
+				}
 			}
 		}
 	}//end for
@@ -311,7 +331,7 @@ void ev_handle_client_srv_req(ev_loop* el, ev* e)	{	//mmmm: server srv req shoul
 	newe->agent = (void*)se.server;
 
 	ev_list_add(el->evlist, newe);
-		
+
 }
 
 

@@ -7,7 +7,7 @@
 
 /* ----------- global settings ----------- */
 #define CHANNEL_COUNT 200
-#define CLIENT_COUNT 700
+#define CLIENT_COUNT 500
 #define SWITCHING_COUNT 100
 
 #define HEARTBEAT_INTERVAL 30

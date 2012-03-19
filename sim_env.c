@@ -46,7 +46,7 @@ void sim_env_init()
 
 
 	/*--- show parameter settings ---*/
-	printf("************ Parameters: ************\n");
+	printf("************ Parameters ************\n");
 	printf("CH=%d, CLIENT=%d, SWITCHINGS(per client)=%d\n", CHANNEL_COUNT, CLIENT_COUNT, SWITCHING_COUNT);
 	printf("HB_INTERVAL=%d, BC_INTERVAL=%d\n", HEARTBEAT_INTERVAL, BROADCAST_INTERVAL);
 	printf("\n");
@@ -83,7 +83,9 @@ void sim_env_init()
 	
 
 	/*--- add clients ---*/
+	printf("Clients generation started.");
 	clients = generate_input_clients_simple_1(se.nclients, SWITCHING_COUNT, CHANNEL_COUNT);
+	printf("Clients are generated successfully!");
 
 	se.clients = (sm_client**)malloc(se.nclients*sizeof(sm_client*));
 	for(i=0;i<se.nclients;i++)	{
