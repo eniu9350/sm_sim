@@ -16,8 +16,6 @@ starting channel same;
 =======================================
 HB_INTERVAL=30, BC_INTERVAL=30
 
-
-
 200ch, 100cl*100s => res_app = 9895
 200ch, 200cl*100s => res_app = 19329
 200ch, 300cl*100s => res_app = 28270
@@ -39,6 +37,20 @@ HB_INTERVAL=30, BC_INTERVAL=30
 hb=10/20, bc=30 => res_app = 45408
 hb=10/20, bc=60 => res_app = 45408
 
+-------------------------right-----------------------------
+
+===============================================
+HB_INTERVAL=30, BC_INTERVAL=30
+
+200ch, 500cl*100s => res_app = 3387
+
+===============================================
+200 CH, 500 CLIENTS, 100 SWITCHINGS
+
+hb=10/30, bc=30 => res_app = 3387
+hb=30, bc=60 => res_app = 6449
+hb=40, bc=60 => res_app = 6449
+hb=50, bc=60 => res_app = 6449
 
 //------q---
 how to decide which handler;
