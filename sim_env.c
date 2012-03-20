@@ -187,6 +187,7 @@ void sim_env_init()
 			ev_list_add(se.el->evlist, e);
 			//			printf("evlistsize=%d, added e time=%ld, lasttime=%ld\n", se.el->evlist->size, e->time, (ev_list_get(se.el->evlist, se.el->evlist->size-1))->time );
 		}
+		client->plan->departure=ltemp;
 	}
 
 	//mmmm:temp, why so slow???
@@ -203,7 +204,9 @@ printf("[ADD_PLANED_EVENTS]step 2. add client heartbeat events.\n");
 ltemp = 30;	//mmm: hb interval, should be loaded	//m0320
 for(i=0;i<se.nclients;i++)	{
 	client = se.clients[i];
+	//printf("client %d\n", i);
 	for(j=client->plan->arrival+ltemp;j<client->plan->departure;j+=ltemp)	{	//mmm: check whether departure time is right
+		//printf("j=%d/%ld\n", j, client->plan->departure);
 		e = ev_create(ET_CLIENT_HB_REQ, j);
 		ed_chr = (evdata_client_hb_req*)malloc(sizeof(evdata_client_hb_req));
 		e->data = (void*)ed_chr;
