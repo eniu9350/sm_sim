@@ -5,6 +5,10 @@
 //#include "log.h"
 //#include "server.h"
 
+#include <lua.h>
+#include <lauxlib.h>
+#include <lualib.h>
+
 /*------- prop name--------------------------*/
 #define PN_DEMUL_INTERVAL "demul.interval"
 #define PN_TRAN_DELAY "tran.delay"
@@ -31,4 +35,4 @@ typedef struct properties	{
 }properties;
 */
 
-
+#endif

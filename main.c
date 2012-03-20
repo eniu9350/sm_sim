@@ -6,8 +6,10 @@
 #include <stdlib.h>
 #include "ev.h"
 #include "sim_env.h"
+#include "common.h"
 
 sim_env se;
+lua_State* L;
 
 int main1()
 {

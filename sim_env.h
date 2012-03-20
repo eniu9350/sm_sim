@@ -5,13 +5,59 @@
 #include "sm_client.h"
 
 
+/* ----------- config names ----------- */
+//see values below also
+/* --- clients --- */
+#define CFG_NAME_CLIENT_COUNT "c_count"
+#define CFG_NAME_CLIENT_ARRIVAL_DIST "c_arrival"
+#define CFG_NAME_CLIENT_DURATION_DIST "c_duration"
+#define CFG_NAME_CLIENT_HEARTBEAT_INTERVAL "c_hbinterval"
+
+
+//Push, check and get (assume g variable of lua state is declared as "L");
+//remember to pop it to gurantee repetitive use of this micro.
+
+#define LUA_PCG_STRING(k, v)  \
+	lua_getglobal(L, k);  \
+if(!lua_isstring(L, -1))  { \
+	printf("%s not string\n", k); \
+} \
+else  { \
+	v = lua_tostring(L, -1);  \
+}
+
+#define LUA_PCG_INT(k, v) \
+	lua_getglobal(L, k);  \
+if(!lua_isnumber(L, -1))  { \
+	printf("%s not number\n", k); \
+} \
+else  { \
+	v = (int)lua_tonumber(L, -1); \
+}
+
+#define LUA_POP lua_pop(L, 1);
+
+//#define CLIENT_COUNT 500
+
+
+/* --- server --- */
+#define CFG_NAME_SERVER_BROADCAST_INTERVAL "s_bcinterval"
+
+/* ----------- config values ----------- */
+#define CFG_VALUE_CLIENT_ARRIVAL_DIST_SYNC "sync"
+#define CFG_VALUE_CLIENT_ARRIVAL_DIST_RANDOM "random"
+
+#define CFG_VALUE_CLIENT_DURATION_DIST_POISSON "poisson"
+#define CFG_VALUE_CLIENT_DURATION_DIST_WTOIN "wtoin"	//dist specified in the "watching television over an ip network" paper
+
+
 /* ----------- global settings ----------- */
 #define CHANNEL_COUNT 200
-#define CLIENT_COUNT 500
+//#define CLIENT_COUNT 500
 #define SWITCHING_COUNT 100
 
-#define HEARTBEAT_INTERVAL 50
-#define BROADCAST_INTERVAL 60
+//#define HEARTBEAT_INTERVAL 30
+//#define BROADCAST_INTERVAL 60
 
 
 
@@ -58,13 +104,13 @@ typedef struct sim_env	{
 
 
 	sm_server* server;
-	
+
 	sm_client** clients;
 	int nclients;
 
 	sim_config* config;
 	sim_stats* stat;
-	
+
 }sim_env;
 
 /* ------ sim env ops -----------*/

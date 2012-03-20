@@ -253,7 +253,7 @@ sm_client* generate_input_clients_simple_1(int nclients, int nswitchings, int nc
 		clients[i].ci = ch_info_client_create();
 		clients[i].state = CLIENT_STATE_WORKING;
 		clients[i].plan = (sm_client_plan*)malloc(sizeof(sm_client_plan));
-		clients[i].plan->arrival = arrival;
+		clients[i].plan->arrival = i%5;//arrival;
 		clients[i].plan->nswitchings = nswitchings;
 		clients[i].plan->switchings = (sm_client_plan_switching_entry**)malloc(nswitchings*sizeof(sm_client_plan_switching_entry*));
 		for(j=0;j<nswitchings;j++)	{
