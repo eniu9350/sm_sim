@@ -78,6 +78,7 @@ else  { \
 #define STAT_SIZE 1000
 
 #define STAT_ID_SERVER_SRV_REQ_COUNT 1
+#define STAT_ID_FREQ_USAGE_TIME_SERIES 2
 
 typedef union value	{
 	int i;

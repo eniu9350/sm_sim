@@ -2,6 +2,9 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include "sim_env.h"
+
+extern sim_env se;
 
 /*------- event loop ops--------------------------*/
 ev_loop* ev_loop_create()
@@ -58,6 +61,7 @@ void ev_loop_loop(ev_loop* el)
 		//}
 		e = ev_list_get(el->evlist, 0);
 		//printf("evloop 1.1, etime=%ld\n", e->time);
+		printf("chlist size=%d, evlistsize=%d\n", se.server->ci->size, se.el->evlist->size);
 
 		if(e==NULL)	{
 			break;

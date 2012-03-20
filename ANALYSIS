@@ -52,6 +52,12 @@ hb=30, bc=60 => res_app = 6449
 hb=40, bc=60 => res_app = 6449
 hb=50, bc=60 => res_app = 6449
 
+===============================================
+200 CH, 500 CLIENTS, 100 SWITCHINGS
+hb=30, bc=60 => res_app = 3293
+hb=40, bc=60 => res_app = 3293
+
+===============================================
 //------q---
 how to decide which handler;
 queue sorting needed?
