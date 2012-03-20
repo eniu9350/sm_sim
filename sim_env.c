@@ -70,7 +70,13 @@ void sim_env_init()
 	long end;
 	int itemp;
 	ev* e;
+
 	int nclients;
+	int nchannels;
+	int nswitchings;
+	int interval_bc;
+	int interval_hb;
+
 	sm_client* clients;
 	sm_client* client;
 	evdata_client_switching* ed_cs;
@@ -83,15 +89,20 @@ void sim_env_init()
 	embed_lua_init();
 
 	/*--- get parameter ---*/
+	LUA_PCG_INT(CFG_NAME_CHANNEL_COUNT, nchannels);
+
 	LUA_PCG_INT(CFG_NAME_CLIENT_COUNT, nclients);
+	LUA_PCG_INT(CFG_NAME_CLIENT_SWITCHING_COUNT, nswitchings);
+	LUA_PCG_INT(CFG_NAME_CLIENT_HEARTBEAT_INTERVAL, interval_hb);
+
+	LUA_PCG_INT(CFG_NAME_SERVER_BROADCAST_INTERVAL, interval_bc);
+
 
 	/*--- show parameter settings ---*/
 	printf("************ Parameters ************\n");
-	/*
-		 printf("CH=%d, CLIENT=%d, SWITCHINGS(per client)=%d\n", nclients, CLIENT_COUNT, SWITCHING_COUNT);
-		 printf("HB_INTERVAL=%d, BC_INTERVAL=%d\n", HEARTBEAT_INTERVAL, BROADCAST_INTERVAL);
-		 */
-	printf("nclients=%d\n", nclients);
+	printf("CH=%d, CLIENT=%d, SWITCHINGS(per client)=%d\n", nchannels, nclients, nswitchings);
+	printf("HB_INTERVAL=%d, BC_INTERVAL=%d\n", interval_hb, interval_bc);
+	//printf("nclients=%d\n", nclients);
 	printf("\n");
 
 	/*--- config init ---*/
@@ -126,7 +137,7 @@ void sim_env_init()
 
 	/*--- add clients ---*/
 	printf("[GEN_CLIENTS]started.\n");
-	clients = generate_input_clients_simple_1(se.nclients, SWITCHING_COUNT, CHANNEL_COUNT);
+	clients = generate_input_clients_simple_1(se.nclients, nswitchings, nchannels);
 	printf("[GEN_CLIENTS]ended.\n");
 
 	se.clients = (sm_client**)malloc(se.nclients*sizeof(sm_client*));

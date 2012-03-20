@@ -9,5 +9,6 @@ sm_server* sm_server_create()
 	s = (sm_server*)malloc(sizeof(sm_server));
 	s->ci = create_ch_alist();
 	s->buf_hb_req = create_evdata_server_hb_req_alist();
+	s->start = 0;
 	return s;
 }

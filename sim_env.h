@@ -7,12 +7,16 @@
 
 /* ----------- config names ----------- */
 //see values below also
+#define CFG_NAME_CHANNEL_COUNT "chcount"
 /* --- clients --- */
 #define CFG_NAME_CLIENT_COUNT "c_count"
+#define CFG_NAME_CLIENT_SWITCHING_COUNT "c_swcount"
 #define CFG_NAME_CLIENT_ARRIVAL_DIST "c_arrival"
 #define CFG_NAME_CLIENT_DURATION_DIST "c_duration"
 #define CFG_NAME_CLIENT_HEARTBEAT_INTERVAL "c_hbinterval"
 
+/* --- server --- */
+#define CFG_NAME_SERVER_BROADCAST_INTERVAL "s_bcinterval"
 
 //Push, check and get (assume g variable of lua state is declared as "L");
 //remember to pop it to gurantee repetitive use of this micro.
@@ -40,8 +44,6 @@ else  { \
 //#define CLIENT_COUNT 500
 
 
-/* --- server --- */
-#define CFG_NAME_SERVER_BROADCAST_INTERVAL "s_bcinterval"
 
 /* ----------- config values ----------- */
 #define CFG_VALUE_CLIENT_ARRIVAL_DIST_SYNC "sync"
@@ -52,9 +54,9 @@ else  { \
 
 
 /* ----------- global settings ----------- */
-#define CHANNEL_COUNT 200
+//#define CHANNEL_COUNT 200
 //#define CLIENT_COUNT 500
-#define SWITCHING_COUNT 100
+//#define SWITCHING_COUNT 100
 
 //#define HEARTBEAT_INTERVAL 30
 //#define BROADCAST_INTERVAL 60

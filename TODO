@@ -8,3 +8,5 @@ why two-dimen array can't be init using malloc?
 
 
 server start end not set
+
+duration, arrival config not used yet
