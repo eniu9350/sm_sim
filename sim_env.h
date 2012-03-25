@@ -10,9 +10,9 @@
 #define CFG_NAME_CHANNEL_COUNT "chcount"
 /* --- clients --- */
 #define CFG_NAME_CLIENT_COUNT "c_count"
-#define CFG_NAME_CLIENT_SWITCHING_COUNT "c_swcount"
 #define CFG_NAME_CLIENT_ARRIVAL_DIST "c_arrival"
 #define CFG_NAME_CLIENT_DURATION_DIST "c_duration"
+#define CFG_NAME_CLIENT_SWITCHING_COUNT "c_swcount"
 #define CFG_NAME_CLIENT_HEARTBEAT_INTERVAL "c_hbinterval"
 
 /* --- server --- */

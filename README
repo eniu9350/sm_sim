@@ -1,0 +1,7 @@
+
+
+installing lua:
+
+1. wget lua-x.x.x.tar.gz
+2. sudo make linux
+3. sudo make install
