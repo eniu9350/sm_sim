@@ -53,7 +53,7 @@ void ev_loop_loop(ev_loop* el)
 	printf("[EV_LOOP]started.\n");
 	int evlistsize = -1;	//mmm: can its addr be used(e.g. &evlistsize) when not initialized
 	while(1)	{
-		//printf("evloop 1, now=%ld, evlist.size=%d\n", el->now, el->evlist->size);
+		//LOG(("evloop 1, now=%ld, evlist.size=%d\n", el->now, el->evlist->size));
 		//mmm: if all client ends and server no events, end
 		//e = ev_list_pop_head(el->evlist);
 		//if(el->evlist->size%1000<10)	{
@@ -61,7 +61,7 @@ void ev_loop_loop(ev_loop* el)
 		//}
 		e = ev_list_get(el->evlist, 0);
 		//printf("evloop 1.1, etime=%ld\n", e->time);
-		printf("chlist size=%d, evlistsize=%d\n", se.server->ci->size, se.el->evlist->size);
+		LOG(("chlist size=%d, evlistsize=%d\n", se.server->ci->size, se.el->evlist->size));
 
 		if(e==NULL)	{
 			break;

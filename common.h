@@ -5,6 +5,15 @@
 //#include "log.h"
 //#include "server.h"
 
+
+/*------- debug --------------------------*/
+#ifdef DEBUG
+#define LOG(args) printf args
+#else
+#define LOG(args) ((void) 0)
+#endif /* DEBUG */
+
+/*------- lua --------------------------*/
 #include <lua.h>
 #include <lauxlib.h>
 #include <lualib.h>

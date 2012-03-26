@@ -7,7 +7,6 @@
 #include <stdio.h>
 #include "ev_handler.h"
 #include <string.h>
-#include "common.h"
 
 extern sim_env se;
 extern lua_State* L;

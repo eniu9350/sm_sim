@@ -1,6 +1,8 @@
 #ifndef _SM_SIM_SIM_ENV_
 #define _SM_SIM_SIM_ENV_
 
+#include "common.h"
+
 #include "sm_server.h"
 #include "sm_client.h"
 
